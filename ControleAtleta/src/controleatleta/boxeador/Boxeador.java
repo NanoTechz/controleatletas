@@ -1,5 +1,6 @@
-package controleatleta;
+package controleatleta.boxeador;
 
+import controleatleta.Atleta;
 import java.util.ArrayList;
 
 public class Boxeador extends Atleta {

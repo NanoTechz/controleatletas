@@ -8,7 +8,7 @@
  *
  * Created on 18/10/2011, 20:16:05
  */
-package controleatleta;
+package controleatleta.boxeador;
 
 public class CadastroTelefone extends javax.swing.JDialog {
     private String telefone;

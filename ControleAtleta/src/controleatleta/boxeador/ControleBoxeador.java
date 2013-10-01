@@ -1,4 +1,4 @@
-package controleatleta;
+package controleatleta.boxeador;
 
 import java.util.ArrayList;
 
