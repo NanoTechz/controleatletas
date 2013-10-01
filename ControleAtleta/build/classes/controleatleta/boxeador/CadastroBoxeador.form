@@ -68,7 +68,7 @@
                       <Component id="jButtonCancelar" linkSize="1" min="-2" pref="86" max="-2" attributes="0"/>
                   </Group>
                   <Component id="jScrollPane4" alignment="0" max="32767" attributes="1"/>
-                  <Component id="jTabbedPane1" alignment="0" pref="761" max="32767" attributes="1"/>
+                  <Component id="jTabbedPane1" alignment="0" pref="0" max="32767" attributes="1"/>
               </Group>
               <EmptySpace max="32767" attributes="0"/>
           </Group>
@@ -149,7 +149,7 @@
                               <Component id="jTextFieldPeso" min="-2" pref="56" max="-2" attributes="0"/>
                           </Group>
                           <Group type="102" alignment="1" attributes="0">
-                              <Component id="jScrollPane1" pref="575" max="32767" attributes="1"/>
+                              <Component id="jScrollPane1" pref="522" max="32767" attributes="1"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Component id="jButtonAdicionarTelefone" min="-2" pref="60" max="-2" attributes="0"/>
@@ -369,19 +369,19 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="jLabelComplemento" alignment="0" max="32767" attributes="1"/>
-                          <Component id="jLabelPais" alignment="0" pref="69" max="32767" attributes="0"/>
-                          <Component id="jLabelCidade" alignment="0" pref="69" max="32767" attributes="0"/>
-                          <Component id="jLabelBairro" alignment="0" pref="69" max="32767" attributes="0"/>
-                          <Component id="jLabelNumero" alignment="0" pref="69" max="32767" attributes="0"/>
-                          <Component id="jLabelCep" alignment="0" pref="69" max="32767" attributes="1"/>
-                          <Component id="jLabelEstado" alignment="0" pref="69" max="32767" attributes="0"/>
-                          <Component id="jLabelLogradouro" alignment="0" pref="69" max="32767" attributes="0"/>
+                          <Component id="jLabelPais" alignment="0" max="32767" attributes="0"/>
+                          <Component id="jLabelCidade" alignment="0" max="32767" attributes="0"/>
+                          <Component id="jLabelBairro" alignment="0" max="32767" attributes="0"/>
+                          <Component id="jLabelNumero" alignment="0" max="32767" attributes="0"/>
+                          <Component id="jLabelCep" alignment="0" max="32767" attributes="1"/>
+                          <Component id="jLabelEstado" alignment="0" max="32767" attributes="0"/>
+                          <Component id="jLabelLogradouro" alignment="0" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="jTextFieldCidade" alignment="0" min="-2" pref="120" max="-2" attributes="0"/>
                           <Component id="jTextFieldBairro" alignment="0" min="-2" pref="120" max="-2" attributes="0"/>
-                          <Component id="jTextFieldComplemento" alignment="0" pref="706" max="32767" attributes="0"/>
+                          <Component id="jTextFieldComplemento" alignment="0" pref="641" max="32767" attributes="0"/>
                           <Component id="jTextFieldNumero" alignment="0" min="-2" pref="50" max="-2" attributes="0"/>
                           <Component id="jTextFieldLogradouro" alignment="0" pref="706" max="32767" attributes="1"/>
                           <Component id="jComboBoxEstado" min="-2" max="-2" attributes="0"/>
@@ -574,7 +574,7 @@
                           <Component id="jTextFieldTotalVitorias" alignment="0" pref="307" max="32767" attributes="1"/>
                           <Component id="jTextFieldTotalLutas" alignment="0" pref="307" max="32767" attributes="1"/>
                           <Component id="jTextFieldEnvergadura" alignment="0" pref="307" max="32767" attributes="1"/>
-                          <Component id="jComboBoxEstilo" alignment="0" pref="307" max="32767" attributes="1"/>
+                          <Component id="jComboBoxEstilo" alignment="0" pref="240" max="32767" attributes="1"/>
                           <Component id="jTextFieldCategoriaPeso" alignment="0" pref="307" max="32767" attributes="1"/>
                           <Component id="jComboBoxCategoria" alignment="0" pref="307" max="32767" attributes="1"/>
                       </Group>
@@ -663,7 +663,7 @@
                               </Group>
                           </Group>
                       </Group>
-                      <EmptySpace pref="64" max="32767" attributes="0"/>
+                      <EmptySpace max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
