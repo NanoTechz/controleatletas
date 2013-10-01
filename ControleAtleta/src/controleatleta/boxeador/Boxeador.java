@@ -1,5 +1,6 @@
 package controleatleta.boxeador;
 
+import controleatleta.Premiacao;
 import controleatleta.Atleta;
 import java.util.ArrayList;
 

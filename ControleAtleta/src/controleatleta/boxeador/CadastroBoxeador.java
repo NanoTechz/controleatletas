@@ -1,5 +1,6 @@
 package controleatleta.boxeador;
 
+import controleatleta.Premiacao;
 import controleatleta.Endereco;
 import java.text.DateFormat;
 import java.text.ParseException;

@@ -10,20 +10,26 @@ public class JogadorBasquete extends Atleta{
     private short numeroCamisa;
     private List<Time> clubes;
     private List<DadosPartida> historicoPartidas;
+    private List<Premiacao> premiacoes;
 
     public JogadorBasquete(Posicao posicao, String nome) {
         super(nome);
         this.posicao = posicao;
         this.clubes = new ArrayList<Time>();
         this.historicoPartidas = new ArrayList<DadosPartida>();
+        this.premiacoes = new ArrayList<Premiacao>();
     }
 
     public void addTime(Time time){
-        clubes.add(time);
+        this.clubes.add(time);
     } 
     
     public void addPartida(DadosPartida partida){
-       historicoPartidas.add(partida);
+       this.historicoPartidas.add(partida);
+    }
+    
+    public void addPartida(Premiacao premiacao){
+        this.premiacoes.add(premiacao);
     }
 
     public char getCategoria() {
@@ -56,5 +62,10 @@ public class JogadorBasquete extends Atleta{
 
     public List<DadosPartida> getHistoricoPartidas() {
         return historicoPartidas;
-    }    
+    }  
+
+    public List<Premiacao> getPremiacoes() {
+        return premiacoes;
+    }
+ 
 }

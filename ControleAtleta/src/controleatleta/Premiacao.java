@@ -1,4 +1,4 @@
-package controleatleta.boxeador;
+package controleatleta;
 
 public class Premiacao {
 

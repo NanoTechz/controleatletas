@@ -1,5 +1,6 @@
 package controleatleta.boxeador;
 
+import controleatleta.Premiacao;
 import javax.swing.JOptionPane;
 
 public class CadastroPremiacao extends javax.swing.JDialog {
