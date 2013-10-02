@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.1" encoding="UTF-8" ?>
 
 <Form version="1.5" maxVersion="1.7" type="org.netbeans.modules.form.forminfo.JFrameFormInfo">
   <NonVisualComponents>
@@ -29,7 +29,6 @@
   </Properties>
   <SyntheticProperties>
     <SyntheticProperty name="formSizePolicy" type="int" value="1"/>
-    <SyntheticProperty name="generateCenter" type="boolean" value="false"/>
   </SyntheticProperties>
   <AuxValues>
     <AuxValue name="FormSettings_autoResourcing" type="java.lang.Integer" value="0"/>
@@ -62,7 +61,9 @@
                       <Component id="jButtonExcluir" linkSize="1" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="jButtonPesquisar" linkSize="1" min="-2" max="-2" attributes="1"/>
-                      <EmptySpace min="-2" pref="222" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="49" max="-2" attributes="0"/>
+                      <Component id="jButton1" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="107" max="-2" attributes="0"/>
                       <Component id="jButtonSalvar" linkSize="1" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="jButtonCancelar" linkSize="1" min="-2" pref="86" max="-2" attributes="0"/>
@@ -85,6 +86,7 @@
                   <Component id="jButtonPesquisar" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="jButtonSalvar" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="jButtonCancelar" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="jButton1" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="jLabelListaBoxeadores" min="-2" max="-2" attributes="0"/>
@@ -136,7 +138,7 @@
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="jTextFieldNome" pref="641" max="32767" attributes="0"/>
+                          <Component id="jTextFieldNome" pref="578" max="32767" attributes="0"/>
                           <Group type="102" alignment="0" attributes="0">
                               <Component id="jTextFieldDataNascimento" min="-2" pref="112" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
@@ -149,7 +151,7 @@
                               <Component id="jTextFieldPeso" min="-2" pref="56" max="-2" attributes="0"/>
                           </Group>
                           <Group type="102" alignment="1" attributes="0">
-                              <Component id="jScrollPane1" pref="522" max="32767" attributes="1"/>
+                              <Component id="jScrollPane1" pref="512" max="32767" attributes="1"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Component id="jButtonAdicionarTelefone" min="-2" pref="60" max="-2" attributes="0"/>
@@ -157,8 +159,8 @@
                               </Group>
                           </Group>
                           <Component id="jComboBoxSexo" alignment="0" min="-2" pref="92" max="-2" attributes="0"/>
-                          <Component id="jTextFieldNomeMae" alignment="0" pref="641" max="32767" attributes="0"/>
-                          <Component id="jTextFieldNomePai" alignment="0" pref="641" max="32767" attributes="0"/>
+                          <Component id="jTextFieldNomeMae" alignment="0" pref="578" max="32767" attributes="0"/>
+                          <Component id="jTextFieldNomePai" alignment="0" pref="578" max="32767" attributes="0"/>
                           <Group type="103" alignment="0" groupAlignment="1" max="-2" attributes="0">
                               <Component id="jTextFieldCpf" alignment="0" max="32767" attributes="1"/>
                               <Component id="jTextFieldRg" alignment="0" pref="112" max="32767" attributes="1"/>
@@ -369,21 +371,21 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="jLabelComplemento" alignment="0" max="32767" attributes="1"/>
-                          <Component id="jLabelPais" alignment="0" max="32767" attributes="0"/>
-                          <Component id="jLabelCidade" alignment="0" max="32767" attributes="0"/>
-                          <Component id="jLabelBairro" alignment="0" max="32767" attributes="0"/>
-                          <Component id="jLabelNumero" alignment="0" max="32767" attributes="0"/>
-                          <Component id="jLabelCep" alignment="0" max="32767" attributes="1"/>
-                          <Component id="jLabelEstado" alignment="0" max="32767" attributes="0"/>
-                          <Component id="jLabelLogradouro" alignment="0" max="32767" attributes="0"/>
+                          <Component id="jLabelPais" alignment="0" pref="95" max="32767" attributes="0"/>
+                          <Component id="jLabelCidade" alignment="0" pref="95" max="32767" attributes="0"/>
+                          <Component id="jLabelBairro" alignment="0" pref="95" max="32767" attributes="0"/>
+                          <Component id="jLabelNumero" alignment="0" pref="95" max="32767" attributes="0"/>
+                          <Component id="jLabelCep" alignment="0" pref="95" max="32767" attributes="1"/>
+                          <Component id="jLabelEstado" alignment="0" pref="95" max="32767" attributes="0"/>
+                          <Component id="jLabelLogradouro" alignment="0" pref="95" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="jTextFieldCidade" alignment="0" min="-2" pref="120" max="-2" attributes="0"/>
                           <Component id="jTextFieldBairro" alignment="0" min="-2" pref="120" max="-2" attributes="0"/>
-                          <Component id="jTextFieldComplemento" alignment="0" pref="641" max="32767" attributes="0"/>
+                          <Component id="jTextFieldComplemento" alignment="0" pref="619" max="32767" attributes="0"/>
                           <Component id="jTextFieldNumero" alignment="0" min="-2" pref="50" max="-2" attributes="0"/>
-                          <Component id="jTextFieldLogradouro" alignment="0" pref="706" max="32767" attributes="1"/>
+                          <Component id="jTextFieldLogradouro" alignment="0" pref="619" max="32767" attributes="1"/>
                           <Component id="jComboBoxEstado" min="-2" max="-2" attributes="0"/>
                           <Group type="103" alignment="0" groupAlignment="1" max="-2" attributes="0">
                               <Component id="jTextFieldCep" alignment="0" max="32767" attributes="1"/>
@@ -570,16 +572,16 @@
                       </Group>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="jTextFieldTotalDesistencias" alignment="0" pref="307" max="32767" attributes="1"/>
-                          <Component id="jTextFieldTotalDerrotas" alignment="0" pref="307" max="32767" attributes="1"/>
-                          <Component id="jTextFieldTotalEmpates" alignment="0" pref="307" max="32767" attributes="1"/>
-                          <Component id="jTextFieldTotalNocaute" alignment="0" pref="307" max="32767" attributes="1"/>
-                          <Component id="jTextFieldTotalVitorias" alignment="0" pref="307" max="32767" attributes="1"/>
-                          <Component id="jTextFieldTotalLutas" alignment="0" pref="307" max="32767" attributes="1"/>
-                          <Component id="jTextFieldEnvergadura" alignment="0" pref="307" max="32767" attributes="1"/>
-                          <Component id="jComboBoxEstilo" alignment="0" pref="240" max="32767" attributes="1"/>
-                          <Component id="jTextFieldCategoriaPeso" alignment="0" pref="307" max="32767" attributes="1"/>
-                          <Component id="jComboBoxCategoria" alignment="0" pref="307" max="32767" attributes="1"/>
+                          <Component id="jTextFieldTotalDesistencias" alignment="0" pref="205" max="32767" attributes="1"/>
+                          <Component id="jTextFieldTotalDerrotas" alignment="0" pref="205" max="32767" attributes="1"/>
+                          <Component id="jTextFieldTotalEmpates" alignment="0" pref="205" max="32767" attributes="1"/>
+                          <Component id="jTextFieldTotalNocaute" alignment="0" pref="205" max="32767" attributes="1"/>
+                          <Component id="jTextFieldTotalVitorias" alignment="0" pref="205" max="32767" attributes="1"/>
+                          <Component id="jTextFieldTotalLutas" alignment="0" pref="205" max="32767" attributes="1"/>
+                          <Component id="jTextFieldEnvergadura" alignment="0" pref="205" max="32767" attributes="1"/>
+                          <Component id="jComboBoxEstilo" alignment="0" pref="205" max="32767" attributes="1"/>
+                          <Component id="jTextFieldCategoriaPeso" alignment="0" pref="205" max="32767" attributes="1"/>
+                          <Component id="jComboBoxCategoria" alignment="0" pref="205" max="32767" attributes="1"/>
                       </Group>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
@@ -875,5 +877,13 @@
         </Component>
       </SubComponents>
     </Container>
+    <Component class="javax.swing.JButton" name="jButton1">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="jButton1"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton1ActionPerformed"/>
+      </Events>
+    </Component>
   </SubComponents>
 </Form>

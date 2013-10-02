@@ -1,6 +1,7 @@
 package controleatleta.boxeador;
 
 import controleatleta.Premiacao;
+import java.util.Date;
 import javax.swing.JOptionPane;
 
 public class CadastroPremiacao extends javax.swing.JDialog {
@@ -90,14 +91,17 @@ public class CadastroPremiacao extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
 private void jButtonAdicionarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAdicionarActionPerformed
+    short dia, mes, ano;
+    
     try {
-        Integer.parseInt(jTextFieldAno.getText());
+        String temp = jTextFieldAno.getText();
+        
     } catch (Exception e) {
         this.exibirInformacao("O valor do campo 'Ano' é inválido.");
         jTextFieldAno.requestFocus();
         return;
     }
-    premiacao = new Premiacao(jTextFieldTitulo.getText(), Integer.parseInt(jTextFieldAno.getText()));
+    premiacao = new Premiacao(jTextFieldTitulo.getText(), new Date());
     this.setVisible(false);
 }//GEN-LAST:event_jButtonAdicionarActionPerformed
 

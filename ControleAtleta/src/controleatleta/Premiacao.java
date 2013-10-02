@@ -1,13 +1,15 @@
 package controleatleta;
 
+import java.util.Date;
+
 public class Premiacao {
 
     private String titulo;
-    private int ano;
+    private Date data;
 
-    public Premiacao(String titulo, int ano) {
+    public Premiacao(String titulo, Date data) {
         this.titulo = titulo;
-        this.ano = ano;
+        this.data = data;
     }
 
     public String getTitulo() {
@@ -18,16 +20,17 @@ public class Premiacao {
         this.titulo = titulo;
     }
 
-    public int getAno() {
-        return ano;
+    public Date getData() {
+        return data;
     }
 
-    public void setAno(int ano) {
-        this.ano = ano;
+    public void setData(Date data) {
+        this.data = data;
+    
     }
     
     @Override
     public String toString() {
-        return this.ano + " - " + this.titulo;
+        return this.data.toString() + " - " + this.titulo;
     }
 }
