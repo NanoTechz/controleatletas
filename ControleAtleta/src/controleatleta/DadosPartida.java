@@ -7,6 +7,7 @@ public class DadosPartida {
     private Endereco localPartida;
     private char tipo; // A=amistoso O=oficial 
     private boolean pelaSelecaoNacional;
+    private boolean foiVencedor;
     private short pontuacao;
     private short faltasCometidas;
     private short faltasSofridas;
