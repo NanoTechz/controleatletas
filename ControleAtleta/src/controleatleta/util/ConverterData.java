@@ -19,16 +19,21 @@ public class ConverterData {
      * @return Date
      */
     public static Date converterStringParaData(String data){
-        short dia, mes, ano;
+        short campo[] = new short[3];
+        try {
+            String[] split = data.split("/");
+            int i = 0;
+            System.out.println(split);
+            for (String campoTx : split) {
+                campo[i] = Short.parseShort(campoTx);
+                i++;
+            }
+        } catch (Exception e) {
+            return null;
+        }
         
-        dia = (short) Integer.parseInt(data.substring(0,2));
-        mes = (short) Integer.parseInt(data.substring(2,4));
-        ano = (short) Integer.parseInt(data.substring(4));
-        
-        
-        //Meu Deus!
-        if ((dia > 0 ) && (dia < 32) && (mes > 0) && (mes < 13) && (ano > 1800 ) && (ano < 3000))
-             return new Date(ano, mes, dia);
+        if ((campo[0] != 0) && (campo[1] != 0) && (campo[2] != 0) )
+             return new Date(campo[2], campo[1], campo[0]);
         
         return null;
     } 

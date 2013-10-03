@@ -4,7 +4,6 @@ import java.util.Date;
 
 public class DadosPartida {
     private Date data;
-    private Endereco localPartida;
     private char tipo; // A=amistoso O=oficial 
     private boolean pelaSelecaoNacional;
     private boolean foiVencedor;
@@ -35,15 +34,7 @@ public class DadosPartida {
     public void setData(Date data) {
         this.data = data;
     }
-
-    public Endereco getLocalPartida() {
-        return localPartida;
-    }
-
-    public void setLocalPartida(Endereco localPartida) {
-        this.localPartida = localPartida;
-    }
-
+    
     public char getTipo() {
         return tipo;
     }

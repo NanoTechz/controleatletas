@@ -1,8 +1,11 @@
-package controleatleta.boxeador;
+package controleatleta.ui;
 
 import controleatleta.Premiacao;
+import controleatleta.util.ConverterData;
+import controleatleta.util.FabricaMaskFormatter;
 import java.util.Date;
 import javax.swing.JOptionPane;
+import javax.swing.text.MaskFormatter;
 
 public class CadastroPremiacao extends javax.swing.JDialog {
 
@@ -26,7 +29,13 @@ public class CadastroPremiacao extends javax.swing.JDialog {
         jLabelTitulo = new javax.swing.JLabel();
         jTextFieldTitulo = new javax.swing.JTextField();
         jLabelAno = new javax.swing.JLabel();
-        jTextFieldAno = new javax.swing.JTextField();
+        MaskFormatter ftm = null;
+        try{
+            ftm = FabricaMaskFormatter.getData();
+        } catch(Exception e){
+            System.out.println("erro na mascara.");
+        }
+        dataCampo = new javax.swing.JFormattedTextField(ftm);
 
         jButtonCancelar.setText("Cancelar");
         jButtonCancelar.addActionListener(new java.awt.event.ActionListener() {
@@ -59,8 +68,10 @@ public class CadastroPremiacao extends javax.swing.JDialog {
                             .addComponent(jLabelAno))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jTextFieldAno, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jTextFieldTitulo, javax.swing.GroupLayout.DEFAULT_SIZE, 346, Short.MAX_VALUE)))
+                            .addComponent(jTextFieldTitulo, javax.swing.GroupLayout.DEFAULT_SIZE, 346, Short.MAX_VALUE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(dataCampo, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 0, Short.MAX_VALUE))))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(jButtonAdicionar)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -79,7 +90,7 @@ public class CadastroPremiacao extends javax.swing.JDialog {
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabelAno)
-                            .addComponent(jTextFieldAno, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(dataCampo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(32, 32, 32))
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jButtonAdicionar)
@@ -91,18 +102,15 @@ public class CadastroPremiacao extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
 private void jButtonAdicionarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAdicionarActionPerformed
-    short dia, mes, ano;
     
-    try {
-        String temp = jTextFieldAno.getText();
-        
-    } catch (Exception e) {
-        this.exibirInformacao("O valor do campo 'Ano' é inválido.");
-        jTextFieldAno.requestFocus();
-        return;
-    }
-    premiacao = new Premiacao(jTextFieldTitulo.getText(), new Date());
-    this.setVisible(false);
+    Date data = ConverterData.converterStringParaData(dataCampo.getText());
+    
+    if(data != null){
+        premiacao = new Premiacao(jTextFieldTitulo.getText(), data);
+        this.setVisible(false);
+    } else
+        JOptionPane.showMessageDialog(this, "Erro na inserção da data.");
+    
 }//GEN-LAST:event_jButtonAdicionarActionPerformed
 
 private void exibirInformacao(String info) {
@@ -113,50 +121,15 @@ private void jButtonCancelarActionPerformed(java.awt.event.ActionEvent evt) {//G
     this.setVisible(false);
 }//GEN-LAST:event_jButtonCancelarActionPerformed
 
-    public static void main(String args[]) {
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(CadastroPremiacao.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(CadastroPremiacao.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(CadastroPremiacao.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(CadastroPremiacao.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        java.awt.EventQueue.invokeLater(new Runnable() {
-
-            public void run() {
-                CadastroPremiacao dialog = new CadastroPremiacao(new javax.swing.JFrame(), true);
-                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
-
-                    @Override
-                    public void windowClosing(java.awt.event.WindowEvent e) {
-                        System.exit(0);
-                    }
-                });
-                dialog.setVisible(true);
-            }
-        });
+    public static void main(String[] args) {
+        new CadastroPremiacao(null, true).setVisible(true);
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JFormattedTextField dataCampo;
     private javax.swing.JButton jButtonAdicionar;
     private javax.swing.JButton jButtonCancelar;
     private javax.swing.JLabel jLabelAno;
     private javax.swing.JLabel jLabelTitulo;
-    private javax.swing.JTextField jTextFieldAno;
     private javax.swing.JTextField jTextFieldTitulo;
     // End of variables declaration//GEN-END:variables
 }

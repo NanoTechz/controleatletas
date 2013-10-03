@@ -5,6 +5,7 @@
 package controleatleta.ui;
 
 import controleatleta.Posicao;
+import controleatleta.util.FabricaMaskFormatter;
 import java.text.ParseException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -26,17 +27,13 @@ public class CadastroJogadorBasquete extends javax.swing.JFrame {
      */
     public CadastroJogadorBasquete() {
         try {
-            ftmData = new MaskFormatter("##/##/####");
-            ftmData.setValidCharacters("0123456789");
+            ftmData = FabricaMaskFormatter.getData();
             
-            ftmRG = new MaskFormatter("#######");
-            ftmRG.setValidCharacters("0123456789");
+            ftmRG = FabricaMaskFormatter.getRG();
             
-            ftmCPF = new MaskFormatter("###.###.###-##");
-            ftmCPF.setValidCharacters("0123456789");
+            ftmCPF = FabricaMaskFormatter.getCPF();
             
-            ftmCEP = new MaskFormatter("##.###-##");
-            ftmCEP.setValidCharacters("0123456789");
+            ftmCEP = FabricaMaskFormatter.getCEP();
             
         } catch (ParseException ex) {
             Logger.getLogger(CadastroJogadorBasquete.class.getName()).log(Level.SEVERE, null, ex);
