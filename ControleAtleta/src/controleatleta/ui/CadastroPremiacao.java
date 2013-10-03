@@ -121,9 +121,6 @@ private void jButtonCancelarActionPerformed(java.awt.event.ActionEvent evt) {//G
     this.setVisible(false);
 }//GEN-LAST:event_jButtonCancelarActionPerformed
 
-    public static void main(String[] args) {
-        new CadastroPremiacao(null, true).setVisible(true);
-    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JFormattedTextField dataCampo;
     private javax.swing.JButton jButtonAdicionar;
