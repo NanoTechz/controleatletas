@@ -1,6 +1,6 @@
 package controleatleta.ui;
 
-import controleatleta.DadosPartida;
+import controleatleta.Partida;
 import controleatleta.util.FabricaMaskFormatter;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -13,10 +13,10 @@ import javax.swing.text.MaskFormatter;
 
 public class CadastroPartida extends javax.swing.JDialog {
 
-    private DadosPartida partida;
+    private Partida partida;
     private SimpleDateFormat dateFormat;
 
-    public DadosPartida getPartida() {
+    public Partida getPartida() {
         return partida;
     }
 
@@ -44,7 +44,7 @@ public class CadastroPartida extends javax.swing.JDialog {
             Logger.getLogger(CadastroPartida.class.getName()).log(Level.SEVERE, null, ex);
         }
         
-        partida = new DadosPartida(data, tipo, jgPelaSelecaoCampo.isSelected());
+        partida = new Partida(data, tipo, jgPelaSelecaoCampo.isSelected());
         partida.setFaltasCometidas(Short.parseShort(jTextFieldFaltasCometidas.getText()));
         partida.setFaltasSofridas(Short.parseShort(jTextFieldFaltasSofridas.getText()));
         partida.setPontuacao(Short.parseShort(jTextFieldPontuacao.getText()));

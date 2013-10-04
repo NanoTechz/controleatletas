@@ -3,7 +3,7 @@ package controleatleta;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class DadosPartida {
+public class Partida {
     private Date data;
     private char tipo; // A=amistoso O=oficial 
     private boolean pelaSelecaoNacional;
@@ -14,7 +14,7 @@ public class DadosPartida {
     private short qtdLancesLivres;
     private short qtdLancesLivresConvertidos;
 
-    public DadosPartida(Date data, char tipo, boolean pelaSelecaoNacional) {
+    public Partida(Date data, char tipo, boolean pelaSelecaoNacional) {
         this.data = data;
         this.tipo = tipo;
         this.pelaSelecaoNacional = pelaSelecaoNacional;

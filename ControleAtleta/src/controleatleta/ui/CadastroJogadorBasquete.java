@@ -5,7 +5,7 @@
 package controleatleta.ui;
 
 import controleatleta.ControleJogadorBasquete;
-import controleatleta.DadosPartida;
+import controleatleta.Partida;
 import controleatleta.Endereco;
 import controleatleta.JogadorBasquete;
 import controleatleta.Posicao;
@@ -155,7 +155,7 @@ public class CadastroJogadorBasquete extends javax.swing.JFrame {
         ArrayList<String> telefones;
         ArrayList<Premiacao> premiacoes;
         ArrayList<Time> times;
-        ArrayList<DadosPartida> partidas;
+        ArrayList<Partida> partidas;
 
         jTextFieldAltura.setText(Double.toString(jogador.getAltura()));
         jTextFieldBairro.setText(jogador.getEndereco().getBairro());
@@ -198,7 +198,7 @@ public class CadastroJogadorBasquete extends javax.swing.JFrame {
         partidasListModel.clear();
         partidas = jogador.getHistoricoPartidas();
         
-        for (DadosPartida dadosPartida : partidas) {
+        for (Partida dadosPartida : partidas) {
             partidasListModel.addElement(dadosPartida);
         }
 
@@ -342,7 +342,7 @@ public class CadastroJogadorBasquete extends javax.swing.JFrame {
         ArrayList<Time> times = new ArrayList<Time>();
         ArrayList<Premiacao> premiacoes = new ArrayList<Premiacao>();
         ArrayList<String> telefones = new ArrayList<String>();
-        ArrayList<DadosPartida> partidas = new ArrayList<DadosPartida>();
+        ArrayList<Partida> partidas = new ArrayList<Partida>();
         
         if (this.validarCampos() == false) {
             return;
@@ -386,7 +386,7 @@ public class CadastroJogadorBasquete extends javax.swing.JFrame {
         }
 
         for (int i = 0; i < partidasListModel.size(); i++) {
-            partidas.add((DadosPartida) partidasListModel.getElementAt(i));
+            partidas.add((Partida) partidasListModel.getElementAt(i));
         }
 
         for (int i = 0; i < timesListModel.size(); i++) {
