@@ -60,7 +60,6 @@ public class CadastroJogadorBasquete extends javax.swing.JFrame {
     private MaskFormatter ftmCPF;
     private MaskFormatter ftmCEP;
     private JogadorBasquete jogador;
-    private ArrayList<DadosPartida> tempHistoricoPartidas;
     private ControleJogadorBasquete controleJogador;
 
     public CadastroJogadorBasquete() {
@@ -130,10 +129,12 @@ public class CadastroJogadorBasquete extends javax.swing.JFrame {
         jTextFieldNumero.setText("0");
         jTextFieldPeso.setText("0.0");
         jFormattedTextFieldRg.setText(null);
+        
         telefonesListModel.clear();
         premiacaoListModel.clear();
         partidasListModel.clear();
         timesListModel.clear();
+        
         jComboBoxSexo.setSelectedIndex(0);
         jComboBoxCategoria.setSelectedIndex(0);
 
@@ -153,6 +154,8 @@ public class CadastroJogadorBasquete extends javax.swing.JFrame {
     private void preencherCampos() {
         ArrayList<String> telefones;
         ArrayList<Premiacao> premiacoes;
+        ArrayList<Time> times;
+        ArrayList<DadosPartida> partidas;
 
         jTextFieldAltura.setText(Double.toString(jogador.getAltura()));
         jTextFieldBairro.setText(jogador.getEndereco().getBairro());
@@ -186,12 +189,26 @@ public class CadastroJogadorBasquete extends javax.swing.JFrame {
         }
 
         premiacaoListModel.clear();
-        premiacoes = (ArrayList<Premiacao>) jogador.getPremiacoes();
+        premiacoes = jogador.getPremiacoes();
 
         for (Premiacao p : premiacoes) {
             premiacaoListModel.addElement(p);
         }
+        
+        partidasListModel.clear();
+        partidas = jogador.getHistoricoPartidas();
+        
+        for (DadosPartida dadosPartida : partidas) {
+            partidasListModel.addElement(dadosPartida);
+        }
 
+        timesListModel.clear();
+        times= jogador.getClubes();
+        
+        for (Time time : times) {
+            timesListModel.addElement(time);
+        }
+        
         switch (jogador.getSexo()) {
             case SEXO_MASCULINO_VALOR:
                 jComboBoxSexo.setSelectedIndex(SEXO_MASCULINO_INDICE);
@@ -321,7 +338,12 @@ public class CadastroJogadorBasquete extends javax.swing.JFrame {
 
         Endereco endereco;
         Date dataNascimento;
-
+        
+        ArrayList<Time> times = new ArrayList<Time>();
+        ArrayList<Premiacao> premiacoes = new ArrayList<Premiacao>();
+        ArrayList<String> telefones = new ArrayList<String>();
+        ArrayList<DadosPartida> partidas = new ArrayList<DadosPartida>();
+        
         if (this.validarCampos() == false) {
             return;
         }
@@ -355,20 +377,20 @@ public class CadastroJogadorBasquete extends javax.swing.JFrame {
 
 
         for (int i = 0; i < telefonesListModel.size(); i++) {
-            jogador.addTelefone((String) telefonesListModel.getElementAt(i));
+            telefones.add((String) telefonesListModel.getElementAt(i));
         }
 
         for (int i = 0; i < premiacaoListModel.size(); i++) {
             Premiacao premiacao = (Premiacao) premiacaoListModel.getElementAt(i);
-            jogador.addPartida(premiacao);
+            premiacoes.add(premiacao);
         }
 
         for (int i = 0; i < partidasListModel.size(); i++) {
-            jogador.addPartida((DadosPartida) partidasListModel.getElementAt(i));
+            partidas.add((DadosPartida) partidasListModel.getElementAt(i));
         }
 
         for (int i = 0; i < timesListModel.size(); i++) {
-            jogador.addTime((Time) timesListModel.getElementAt(i));
+            times.add((Time) timesListModel.getElementAt(i));
         }
 
         jogador.setEndereco(endereco);
@@ -379,6 +401,11 @@ public class CadastroJogadorBasquete extends javax.swing.JFrame {
         jogador.setPeso(Double.parseDouble(jTextFieldPeso.getText()));
         jogador.setCpf(jFormattedTextFieldCpf.getText());
         jogador.setRg(jFormattedTextFieldRg.getText());
+        
+        jogador.setTimes(times);
+        jogador.setPremiacoes(premiacoes);
+        jogador.setHistoricoPartidas(partidas);
+        jogador.setTelefones(telefones);
 
 
         switch (jComboBoxSexo.getSelectedIndex()) {
@@ -1304,7 +1331,7 @@ public class CadastroJogadorBasquete extends javax.swing.JFrame {
         CadastroPartida cadastro = new CadastroPartida(this, true);
         cadastro.setVisible(true);
         if (cadastro.getPartida() != null) {
-            premiacaoListModel.addElement(cadastro.getPartida());
+            partidasListModel.addElement(cadastro.getPartida());
         }
         cadastro.dispose();
     }//GEN-LAST:event_jButtonAdionarPartidaActionPerformed
@@ -1325,6 +1352,7 @@ public class CadastroJogadorBasquete extends javax.swing.JFrame {
             exibirInformacao("Jogador não encontrado.");
         } else {
             this.jogador = jogadorAchado;
+            this.limparCampos();
             this.preencherCampos();
             this.habilitarDesabilitarCampos();
         }
@@ -1357,7 +1385,10 @@ public class CadastroJogadorBasquete extends javax.swing.JFrame {
     private void jButtonRemoverPartidaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRemoverPartidaActionPerformed
         // TODO add your handling code here:
         if (jListPartidas.getSelectedIndex() != -1) {
+            if(modoAlteracao)
             partidasListModel.removeElementAt(jListPartidas.getSelectedIndex());
+            
+            
         }
     }//GEN-LAST:event_jButtonRemoverPartidaActionPerformed
 
@@ -1373,7 +1404,7 @@ public class CadastroJogadorBasquete extends javax.swing.JFrame {
         CadastroTime cadastro = new CadastroTime(this, true);
         cadastro.setVisible(true);
         if (cadastro.getTime() != null) {
-            premiacaoListModel.addElement(cadastro.getTime());
+            timesListModel.addElement(cadastro.getTime());
         }
         cadastro.dispose();
     }//GEN-LAST:event_jButtonAdicionarTimeActionPerformed

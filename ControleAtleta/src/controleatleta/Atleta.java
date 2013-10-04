@@ -107,8 +107,8 @@ public class Atleta {
         return telefones;
     }
 
-    public void addTelefone(String telefone) {
-        telefones.add(telefone);
+    public void setTelefones(ArrayList<String> telefones) {
+        this.telefones = telefones;
     }
     
 }

@@ -52,7 +52,7 @@
               </Group>
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace min="27" pref="27" max="-2" attributes="0"/>
-                  <Component id="venceuCampo" min="-2" max="-2" attributes="0"/>
+                  <Component id="VenceuCampo" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="32767" attributes="0"/>
                   <Component id="jgPelaSelecaoCampo" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="32767" attributes="0"/>
@@ -74,11 +74,11 @@
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Component id="tipoCampo" alignment="0" min="-2" pref="107" max="-2" attributes="0"/>
                               <Component id="dataCampo" alignment="0" min="-2" pref="105" max="-2" attributes="0"/>
-                              <Component id="pontuacaoCampo" linkSize="1" alignment="0" min="-2" pref="55" max="-2" attributes="0"/>
-                              <Component id="faltasCometidasCampo" linkSize="1" alignment="0" min="-2" max="-2" attributes="0"/>
-                              <Component id="faltasSofridasCampo" linkSize="1" alignment="0" min="-2" max="-2" attributes="0"/>
-                              <Component id="qtdLancesCampo" linkSize="1" alignment="0" min="-2" max="-2" attributes="0"/>
-                              <Component id="qtdLancesConcertidosCampo" linkSize="1" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <Component id="jTextFieldPontuacao" linkSize="1" alignment="0" min="-2" pref="55" max="-2" attributes="0"/>
+                              <Component id="jTextFieldFaltasCometidas" linkSize="1" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <Component id="jTextFieldFaltasSofridas" linkSize="1" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <Component id="jTextFieldQtdLancesLivres" linkSize="1" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <Component id="jTextFieldQtdLancesConvertidos" linkSize="1" alignment="0" min="-2" max="-2" attributes="0"/>
                           </Group>
                       </Group>
                       <Group type="102" attributes="0">
@@ -108,7 +108,7 @@
                           <EmptySpace type="separate" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="jLabel4" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="pontuacaoCampo" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="jTextFieldPontuacao" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                       </Group>
                       <Component id="tipoCampo" min="-2" max="-2" attributes="0"/>
@@ -116,26 +116,26 @@
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="jLabel5" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="faltasCometidasCampo" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="jTextFieldFaltasCometidas" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="jLabel6" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="faltasSofridasCampo" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="jTextFieldFaltasSofridas" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="jLabel7" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="qtdLancesCampo" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="jTextFieldQtdLancesLivres" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="jLabel8" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="qtdLancesConcertidosCampo" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="jTextFieldQtdLancesConvertidos" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="venceuCampo" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="VenceuCampo" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="jgPelaSelecaoCampo" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
@@ -182,9 +182,12 @@
             <Property name="text" type="java.lang.String" value="Pontua&#xe7;&#xe3;o:"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JTextField" name="pontuacaoCampo">
+        <Component class="javax.swing.JTextField" name="jTextFieldPontuacao">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="0"/>
+          </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="pontuacaoCampoActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jTextFieldPontuacaoActionPerformed"/>
           </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel5">
@@ -207,21 +210,36 @@
             <Property name="text" type="java.lang.String" value="Qtd Lances Livres Convertidos:"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JTextField" name="qtdLancesConcertidosCampo">
+        <Component class="javax.swing.JTextField" name="jTextFieldQtdLancesConvertidos">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="0"/>
+          </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="qtdLancesConcertidosCampoActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jTextFieldQtdLancesConvertidosActionPerformed"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JTextField" name="qtdLancesCampo">
+        <Component class="javax.swing.JTextField" name="jTextFieldQtdLancesLivres">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="0"/>
+          </Properties>
         </Component>
-        <Component class="javax.swing.JTextField" name="faltasSofridasCampo">
+        <Component class="javax.swing.JTextField" name="jTextFieldFaltasSofridas">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="0"/>
+          </Properties>
         </Component>
-        <Component class="javax.swing.JTextField" name="faltasCometidasCampo">
+        <Component class="javax.swing.JTextField" name="jTextFieldFaltasCometidas">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="0"/>
+          </Properties>
         </Component>
         <Component class="javax.swing.JButton" name="adicionar">
           <Properties>
             <Property name="text" type="java.lang.String" value="Adicionar"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="adicionarActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JButton" name="jButton2">
           <Properties>
@@ -231,12 +249,12 @@
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton2ActionPerformed"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JCheckBox" name="venceuCampo">
+        <Component class="javax.swing.JCheckBox" name="VenceuCampo">
           <Properties>
             <Property name="text" type="java.lang.String" value="Venceu"/>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="venceuCampoActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="VenceuCampoActionPerformed"/>
           </Events>
         </Component>
         <Component class="javax.swing.JCheckBox" name="jgPelaSelecaoCampo">

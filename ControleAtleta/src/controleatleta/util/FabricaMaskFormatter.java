@@ -24,7 +24,7 @@ public class FabricaMaskFormatter {
     }
 
     public static MaskFormatter getCEP() throws ParseException {
-        MaskFormatter ftmCEP = new MaskFormatter("##.###-##");
+        MaskFormatter ftmCEP = new MaskFormatter("##.###-###");
         ftmCEP.setValidCharacters("0123456789");
         return ftmCEP;
     }

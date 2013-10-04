@@ -1,31 +1,18 @@
 package controleatleta;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 public class Time {
+
     private String nome;
-    private Endereco endereco;
-    private List<String> contatos;
     private Date de;
     private Date ate;
 
-    public Time(String nome, Endereco endereco, Date de) {
-        this(nome, endereco, new ArrayList<String>(), de);
-    }
-    
-    public Time(String nome, Endereco endereco, List<String> contatos, Date de) {
+    public Time(String nome, Date de) {
         this.nome = nome;
         this.de = de;
-        this.endereco = endereco;
-        this.contatos = contatos;
     }
-        
-    public void addTelefone(String telefone) {
-        contatos.add(telefone);
-    }
-        
+
     public String getNome() {
         return nome;
     }
@@ -34,22 +21,24 @@ public class Time {
         this.nome = nome;
     }
 
-    public Endereco getEndereco() {
-        return endereco;
+    public Date getDe() {
+        return de;
     }
 
-    public void setEndereco(Endereco endereco) {
-        this.endereco = endereco;
+    public void setDe(Date de) {
+        this.de = de;
     }
 
-    public List<String> getContatos() {
-        return contatos;
-    }   
+    public Date getAte() {
+        return ate;
+    }
+
+    public void setAte(Date ate) {
+        this.ate = ate;
+    }
 
     @Override
     public String toString() {
         return nome;
     }
-    
-    
 }

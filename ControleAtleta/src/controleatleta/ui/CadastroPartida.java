@@ -2,22 +2,92 @@ package controleatleta.ui;
 
 import controleatleta.DadosPartida;
 import controleatleta.util.FabricaMaskFormatter;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+import javax.swing.JTextField;
 import javax.swing.text.MaskFormatter;
 
 public class CadastroPartida extends javax.swing.JDialog {
-    
+
     private DadosPartida partida;
+    private SimpleDateFormat dateFormat;
 
     public DadosPartida getPartida() {
         return partida;
     }
-    
+
     /**
      * Creates new form CadastroPartida
      */
     public CadastroPartida(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
+        dateFormat = new SimpleDateFormat("dd/MM/yyyy");
         initComponents();
+    }
+
+    private void salvarPartida() {        
+        char tipo;
+        Date data = null;
+        
+        if(tipoCampo.getSelectedIndex() == 0)
+            tipo = 'A';
+        else
+            tipo = 'O';
+        
+        try {
+            data = dateFormat.parse(dataCampo.getText());
+        } catch (ParseException ex) {
+            Logger.getLogger(CadastroPartida.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        partida = new DadosPartida(data, tipo, jgPelaSelecaoCampo.isSelected());
+        partida.setFaltasCometidas(Short.parseShort(jTextFieldFaltasCometidas.getText()));
+        partida.setFaltasSofridas(Short.parseShort(jTextFieldFaltasSofridas.getText()));
+        partida.setPontuacao(Short.parseShort(jTextFieldPontuacao.getText()));
+        partida.setQtdLancesLivres(Short.parseShort(jTextFieldQtdLancesLivres.getText()));
+        partida.setQtdLancesLivresConvertidos(Short.parseShort(jTextFieldQtdLancesConvertidos.getText()));
+        partida.setFoiVencedor(VenceuCampo.isSelected());      
+    }
+
+    private boolean validar() {
+
+        if (!(validarCampoInteiro(jTextFieldPontuacao, "Pontuação")
+                && validarCampoInteiro(jTextFieldFaltasCometidas, "Faltas cometidas")
+                && validarCampoInteiro(jTextFieldFaltasSofridas, "Faltas Sofridas")
+                && validarCampoInteiro(jTextFieldQtdLancesLivres, "Qtd de Lances Livres")
+                && validarCampoInteiro(jTextFieldQtdLancesConvertidos, "Qtd de Lances Livres Convertidos"))) {
+            return false;
+        }
+
+        
+        if (dataCampo.getText().replace(" ", "").length() > 3) {
+            try {
+                dateFormat.parse(dataCampo.getText());
+            } catch (ParseException ex) {
+                JOptionPane.showMessageDialog(this, "O valor do campo 'Data' é inválido.");
+                dataCampo.requestFocus();
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private boolean validarCampoInteiro(JTextField jTextField, String nomeCampo) {
+
+        try {
+            Integer.parseInt(jTextField.getText());
+        } catch (Exception e) {
+            jTextField.requestFocus();
+            JOptionPane.showMessageDialog(this, "Erro no campo '" + nomeCampo + "'.");
+            return false;
+        }
+
+        return true;
     }
 
     /**
@@ -42,18 +112,18 @@ public class CadastroPartida extends javax.swing.JDialog {
         jLabel3 = new javax.swing.JLabel();
         tipoCampo = new javax.swing.JComboBox();
         jLabel4 = new javax.swing.JLabel();
-        pontuacaoCampo = new javax.swing.JTextField();
+        jTextFieldPontuacao = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
-        qtdLancesConcertidosCampo = new javax.swing.JTextField();
-        qtdLancesCampo = new javax.swing.JTextField();
-        faltasSofridasCampo = new javax.swing.JTextField();
-        faltasCometidasCampo = new javax.swing.JTextField();
+        jTextFieldQtdLancesConvertidos = new javax.swing.JTextField();
+        jTextFieldQtdLancesLivres = new javax.swing.JTextField();
+        jTextFieldFaltasSofridas = new javax.swing.JTextField();
+        jTextFieldFaltasCometidas = new javax.swing.JTextField();
         adicionar = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
-        venceuCampo = new javax.swing.JCheckBox();
+        VenceuCampo = new javax.swing.JCheckBox();
         jgPelaSelecaoCampo = new javax.swing.JCheckBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -68,9 +138,10 @@ public class CadastroPartida extends javax.swing.JDialog {
 
         jLabel4.setText("Pontuação:");
 
-        pontuacaoCampo.addActionListener(new java.awt.event.ActionListener() {
+        jTextFieldPontuacao.setText("0");
+        jTextFieldPontuacao.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                pontuacaoCampoActionPerformed(evt);
+                jTextFieldPontuacaoActionPerformed(evt);
             }
         });
 
@@ -82,13 +153,25 @@ public class CadastroPartida extends javax.swing.JDialog {
 
         jLabel8.setText("Qtd Lances Livres Convertidos:");
 
-        qtdLancesConcertidosCampo.addActionListener(new java.awt.event.ActionListener() {
+        jTextFieldQtdLancesConvertidos.setText("0");
+        jTextFieldQtdLancesConvertidos.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                qtdLancesConcertidosCampoActionPerformed(evt);
+                jTextFieldQtdLancesConvertidosActionPerformed(evt);
             }
         });
 
+        jTextFieldQtdLancesLivres.setText("0");
+
+        jTextFieldFaltasSofridas.setText("0");
+
+        jTextFieldFaltasCometidas.setText("0");
+
         adicionar.setText("Adicionar");
+        adicionar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                adicionarActionPerformed(evt);
+            }
+        });
 
         jButton2.setText("Cancelar");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
@@ -97,10 +180,10 @@ public class CadastroPartida extends javax.swing.JDialog {
             }
         });
 
-        venceuCampo.setText("Venceu");
-        venceuCampo.addActionListener(new java.awt.event.ActionListener() {
+        VenceuCampo.setText("Venceu");
+        VenceuCampo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                venceuCampoActionPerformed(evt);
+                VenceuCampoActionPerformed(evt);
             }
         });
 
@@ -115,7 +198,7 @@ public class CadastroPartida extends javax.swing.JDialog {
                 .addGap(0, 0, Short.MAX_VALUE))
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(27, 27, 27)
-                .addComponent(venceuCampo)
+                .addComponent(VenceuCampo)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jgPelaSelecaoCampo)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -135,11 +218,11 @@ public class CadastroPartida extends javax.swing.JDialog {
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(tipoCampo, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(dataCampo, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(pontuacaoCampo, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(faltasCometidasCampo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(faltasSofridasCampo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(qtdLancesCampo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(qtdLancesConcertidosCampo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(jTextFieldPontuacao, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jTextFieldFaltasCometidas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jTextFieldFaltasSofridas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jTextFieldQtdLancesLivres, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jTextFieldQtdLancesConvertidos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(199, 199, 199)
                         .addComponent(adicionar)
@@ -148,7 +231,7 @@ public class CadastroPartida extends javax.swing.JDialog {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jPanel1Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {faltasCometidasCampo, faltasSofridasCampo, pontuacaoCampo, qtdLancesCampo, qtdLancesConcertidosCampo});
+        jPanel1Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {jTextFieldFaltasCometidas, jTextFieldFaltasSofridas, jTextFieldPontuacao, jTextFieldQtdLancesConvertidos, jTextFieldQtdLancesLivres});
 
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -165,27 +248,27 @@ public class CadastroPartida extends javax.swing.JDialog {
                         .addGap(18, 18, 18)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel4)
-                            .addComponent(pontuacaoCampo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(jTextFieldPontuacao, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addComponent(tipoCampo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5)
-                    .addComponent(faltasCometidasCampo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jTextFieldFaltasCometidas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel6)
-                    .addComponent(faltasSofridasCampo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jTextFieldFaltasSofridas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel7)
-                    .addComponent(qtdLancesCampo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jTextFieldQtdLancesLivres, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel8)
-                    .addComponent(qtdLancesConcertidosCampo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jTextFieldQtdLancesConvertidos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(venceuCampo)
+                    .addComponent(VenceuCampo)
                     .addComponent(jgPelaSelecaoCampo))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -214,28 +297,35 @@ public class CadastroPartida extends javax.swing.JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void venceuCampoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_venceuCampoActionPerformed
+    private void VenceuCampoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_VenceuCampoActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_venceuCampoActionPerformed
+    }//GEN-LAST:event_VenceuCampoActionPerformed
 
-    private void qtdLancesConcertidosCampoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_qtdLancesConcertidosCampoActionPerformed
+    private void jTextFieldQtdLancesConvertidosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldQtdLancesConvertidosActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_qtdLancesConcertidosCampoActionPerformed
+    }//GEN-LAST:event_jTextFieldQtdLancesConvertidosActionPerformed
 
-    private void pontuacaoCampoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pontuacaoCampoActionPerformed
+    private void jTextFieldPontuacaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldPontuacaoActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_pontuacaoCampoActionPerformed
+    }//GEN-LAST:event_jTextFieldPontuacaoActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:     
         this.setVisible(false);
     }//GEN-LAST:event_jButton2ActionPerformed
 
+    private void adicionarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_adicionarActionPerformed
+        // TODO add your handling code here:
+        if(validar()){
+            this.salvarPartida();
+            this.setVisible(false);
+        }
+    }//GEN-LAST:event_adicionarActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JCheckBox VenceuCampo;
     private javax.swing.JButton adicionar;
     private javax.swing.JFormattedTextField dataCampo;
-    private javax.swing.JTextField faltasCometidasCampo;
-    private javax.swing.JTextField faltasSofridasCampo;
     private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
@@ -246,11 +336,12 @@ public class CadastroPartida extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JTextField jTextFieldFaltasCometidas;
+    private javax.swing.JTextField jTextFieldFaltasSofridas;
+    private javax.swing.JTextField jTextFieldPontuacao;
+    private javax.swing.JTextField jTextFieldQtdLancesConvertidos;
+    private javax.swing.JTextField jTextFieldQtdLancesLivres;
     private javax.swing.JCheckBox jgPelaSelecaoCampo;
-    private javax.swing.JTextField pontuacaoCampo;
-    private javax.swing.JTextField qtdLancesCampo;
-    private javax.swing.JTextField qtdLancesConcertidosCampo;
     private javax.swing.JComboBox tipoCampo;
-    private javax.swing.JCheckBox venceuCampo;
     // End of variables declaration//GEN-END:variables
 }

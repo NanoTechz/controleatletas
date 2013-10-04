@@ -7,29 +7,26 @@ public class JogadorBasquete extends Atleta{
     private char categoria; // A=Amador P=Profissional
     private Posicao posicao;
     private short numeroCamisa;
-    private ArrayList<Time> clubes;
+    private ArrayList<Time> times;
     private ArrayList<DadosPartida> historicoPartidas;
     private ArrayList<Premiacao> premiacoes;
 
     public JogadorBasquete(String nome) {
         super(nome);
-        this.clubes = new ArrayList<Time>();
-        this.historicoPartidas = new ArrayList<DadosPartida>();
-        this.premiacoes = new ArrayList<Premiacao>();
     }
 
-    public void addTime(Time time){
-        this.clubes.add(time);
-    } 
-    
-    public void addPartida(DadosPartida partida){
-       this.historicoPartidas.add(partida);
+    public void setTimes(ArrayList<Time> times){
+        this.times = times;
     }
     
-    public void addPartida(Premiacao premiacao){
-        this.premiacoes.add(premiacao);
+    public void setHistoricoPartidas(ArrayList<DadosPartida> historicoPartidas){
+        this.historicoPartidas = historicoPartidas;
     }
-
+    
+    public void setPremiacoes(ArrayList<Premiacao> premiacoes){
+        this.premiacoes = premiacoes;
+    }
+    
     public char getCategoria() {
         return categoria;
     }
@@ -55,7 +52,7 @@ public class JogadorBasquete extends Atleta{
     }
 
     public ArrayList<Time> getClubes() {
-        return clubes;
+        return times;
     }
 
     public ArrayList<DadosPartida> getHistoricoPartidas() {
@@ -93,7 +90,7 @@ public class JogadorBasquete extends Atleta{
     public int getVitoriasSelecao(){
         int count =0;
         for (DadosPartida partida : historicoPartidas) {
-            if(partida.isPelaSelecaoNacional() && partida.isPelaSelecaoNacional())
+            if(partida.isPelaSelecaoNacional() && partida.isFoiVencedor())
                 count++;
         }
         
@@ -107,7 +104,7 @@ public class JogadorBasquete extends Atleta{
             media+= partida.getPontuacao();
         }
        
-       return media/historicoPartidas.size();
+       return (historicoPartidas.isEmpty()? 0 : media/historicoPartidas.size());
     }
     
     public double getPorcentagemLancesLivresConvertidos(){
@@ -119,9 +116,9 @@ public class JogadorBasquete extends Atleta{
             total_convertidos = partida.getQtdLancesLivresConvertidos();
         }
        
-       return total_convertidos/total;
-    }
+       return (total == 0? 0 : total_convertidos/total); 
     
+    }
     public double getMediaFaltasSofridas(){
         double total= 0;
         
@@ -129,7 +126,7 @@ public class JogadorBasquete extends Atleta{
             total+= partida.getFaltasSofridas();
         }
        
-       return total/historicoPartidas.size();
+       return (historicoPartidas.isEmpty()? 0 : total/historicoPartidas.size());
     }
 
     public double getMediaFaltasCometidas(){
@@ -139,6 +136,8 @@ public class JogadorBasquete extends Atleta{
             total+= partida.getFaltasCometidas();
         }
        
-       return total/historicoPartidas.size();
+       return (historicoPartidas.isEmpty()? 0 : total/historicoPartidas.size());
     }
+    
+    
 }
