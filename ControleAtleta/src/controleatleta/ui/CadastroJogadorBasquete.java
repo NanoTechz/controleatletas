@@ -227,7 +227,7 @@ public class CadastroJogadorBasquete extends javax.swing.JFrame {
                 break;
         }
 
-        jComboBoxPosicao.setSelectedItem(posicao.get(jogador.getPosicao()));
+        jComboBoxPosicao.setSelectedIndex(posicao.get(jogador.getPosicao()));
 
         jTextFieldNumeroCamisa.setText("" + jogador.getNumeroCamisa());
         jTextFieldTotalJogos.setText("" + jogador.getTotalJogos());
@@ -401,7 +401,7 @@ public class CadastroJogadorBasquete extends javax.swing.JFrame {
         jogador.setPeso(Double.parseDouble(jTextFieldPeso.getText()));
         jogador.setCpf(jFormattedTextFieldCpf.getText());
         jogador.setRg(jFormattedTextFieldRg.getText());
-        
+        jogador.setNumeroCamisa(Short.parseShort(jTextFieldNumeroCamisa.getText()));
         jogador.setTimes(times);
         jogador.setPremiacoes(premiacoes);
         jogador.setHistoricoPartidas(partidas);

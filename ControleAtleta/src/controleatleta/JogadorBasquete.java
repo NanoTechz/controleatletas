@@ -116,7 +116,7 @@ public class JogadorBasquete extends Atleta{
             total_convertidos = partida.getQtdLancesLivresConvertidos();
         }
        
-       return (total == 0? 0 : total_convertidos/total); 
+       return (total == 0? 0 : total_convertidos/total) * 100; 
     
     }
     public double getMediaFaltasSofridas(){
