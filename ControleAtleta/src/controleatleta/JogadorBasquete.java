@@ -1,20 +1,18 @@
 package controleatleta;
 
 import java.util.ArrayList;
-import java.util.List;
 
 
 public class JogadorBasquete extends Atleta{
     private char categoria; // A=Amador P=Profissional
     private Posicao posicao;
     private short numeroCamisa;
-    private List<Time> clubes;
-    private List<DadosPartida> historicoPartidas;
-    private List<Premiacao> premiacoes;
+    private ArrayList<Time> clubes;
+    private ArrayList<DadosPartida> historicoPartidas;
+    private ArrayList<Premiacao> premiacoes;
 
-    public JogadorBasquete(Posicao posicao, String nome) {
+    public JogadorBasquete(String nome) {
         super(nome);
-        this.posicao = posicao;
         this.clubes = new ArrayList<Time>();
         this.historicoPartidas = new ArrayList<DadosPartida>();
         this.premiacoes = new ArrayList<Premiacao>();
@@ -56,16 +54,91 @@ public class JogadorBasquete extends Atleta{
         this.numeroCamisa = numeroCamisa;
     }
 
-    public List<Time> getClubes() {
+    public ArrayList<Time> getClubes() {
         return clubes;
     }
 
-    public List<DadosPartida> getHistoricoPartidas() {
+    public ArrayList<DadosPartida> getHistoricoPartidas() {
         return historicoPartidas;
     }  
 
-    public List<Premiacao> getPremiacoes() {
+    public ArrayList<Premiacao> getPremiacoes() {
         return premiacoes;
     }
- 
+    
+    public int getTotalJogos(){
+        return historicoPartidas.size();
+    }
+    
+    public int getTotalVitorias(){
+        int count =0;
+        for (DadosPartida partida : historicoPartidas) {
+            if(partida.isFoiVencedor())
+                count++;
+        }
+        
+        return count;
+    }
+    
+    public int getJogosSelecao(){
+        int count =0;
+        for (DadosPartida partida : historicoPartidas) {
+            if(partida.isPelaSelecaoNacional())
+                count++;
+        }
+        
+        return count;
+    } 
+    
+    public int getVitoriasSelecao(){
+        int count =0;
+        for (DadosPartida partida : historicoPartidas) {
+            if(partida.isPelaSelecaoNacional() && partida.isPelaSelecaoNacional())
+                count++;
+        }
+        
+        return count;
+    }
+    
+    public double getPontuacaoMedia(){
+        double media = 0;
+        
+       for (DadosPartida partida : historicoPartidas) {
+            media+= partida.getPontuacao();
+        }
+       
+       return media/historicoPartidas.size();
+    }
+    
+    public double getPorcentagemLancesLivresConvertidos(){
+        double total= 0;
+        double total_convertidos = 0;
+        
+       for (DadosPartida partida : historicoPartidas) {
+            total+= partida.getQtdLancesLivres();
+            total_convertidos = partida.getQtdLancesLivresConvertidos();
+        }
+       
+       return total_convertidos/total;
+    }
+    
+    public double getMediaFaltasSofridas(){
+        double total= 0;
+        
+       for (DadosPartida partida : historicoPartidas) {
+            total+= partida.getFaltasSofridas();
+        }
+       
+       return total/historicoPartidas.size();
+    }
+
+    public double getMediaFaltasCometidas(){
+        double total= 0;
+        
+       for (DadosPartida partida : historicoPartidas) {
+            total+= partida.getFaltasCometidas();
+        }
+       
+       return total/historicoPartidas.size();
+    }
 }

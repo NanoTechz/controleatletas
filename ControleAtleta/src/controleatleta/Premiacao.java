@@ -1,5 +1,6 @@
 package controleatleta;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Premiacao {
@@ -31,6 +32,7 @@ public class Premiacao {
     
     @Override
     public String toString() {
-        return this.data.toString() + " - " + this.titulo;
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        return simpleDateFormat.format(data) + " - " + this.titulo;
     }
 }

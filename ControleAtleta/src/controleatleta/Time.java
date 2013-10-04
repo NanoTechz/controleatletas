@@ -7,22 +7,22 @@ import java.util.List;
 public class Time {
     private String nome;
     private Endereco endereco;
-    private List<Telefone> contatos;
+    private List<String> contatos;
     private Date de;
     private Date ate;
 
     public Time(String nome, Endereco endereco, Date de) {
-        this(nome, endereco, new ArrayList<Telefone>(), de);
+        this(nome, endereco, new ArrayList<String>(), de);
     }
     
-    public Time(String nome, Endereco endereco, List<Telefone> contatos, Date de) {
+    public Time(String nome, Endereco endereco, List<String> contatos, Date de) {
         this.nome = nome;
         this.de = de;
         this.endereco = endereco;
         this.contatos = contatos;
     }
         
-    public void addTelefone(Telefone telefone) {
+    public void addTelefone(String telefone) {
         contatos.add(telefone);
     }
         
@@ -42,7 +42,14 @@ public class Time {
         this.endereco = endereco;
     }
 
-    public List<Telefone> getContatos() {
+    public List<String> getContatos() {
         return contatos;
-    }    
+    }   
+
+    @Override
+    public String toString() {
+        return nome;
+    }
+    
+    
 }

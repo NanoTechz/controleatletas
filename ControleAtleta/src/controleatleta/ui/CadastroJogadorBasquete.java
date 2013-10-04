@@ -4,12 +4,27 @@
  */
 package controleatleta.ui;
 
+import controleatleta.ControleJogadorBasquete;
+import controleatleta.DadosPartida;
+import controleatleta.Endereco;
+import controleatleta.JogadorBasquete;
 import controleatleta.Posicao;
+import controleatleta.Premiacao;
+import controleatleta.Time;
 import controleatleta.util.FabricaMaskFormatter;
+import java.text.DateFormat;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.EnumMap;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.text.MaskFormatter;
 
 /**
@@ -17,29 +32,400 @@ import javax.swing.text.MaskFormatter;
  * @author nanson
  */
 public class CadastroJogadorBasquete extends javax.swing.JFrame {
-    
+
+    private final byte SEXO_MASCULINO_INDICE = 0;
+    private final byte SEXO_FEMININO_INDICE = 1;
+    private final char SEXO_MASCULINO_VALOR = 'M';
+    private final char SEXO_FEMININO_VALOR = 'F';
+    private final byte CATEGORIA_AMADOR_INDICE = 0;
+    private final byte CATEGORIA_PROFISSIONAL_INDICE = 1;
+    private final char CATEGORIA_AMADOR_VALOR = 'A';
+    private final char CATEGORIA_PROFISSIONAL_VALOR = 'P';
+    private Map<Posicao, Integer> posicao;
+    private Map<Integer, Posicao> posicao_inversa;
+    private final Posicao POSICAO_ALA = Posicao.ALA;
+    private final Posicao POSICAO_ALA_ARMADOR = Posicao.ALA_ARMADOR;
+    private final Posicao POSICAO_PIVO = Posicao.PIVO;
+    private final Posicao POSICAO_ARMADOR = Posicao.PIVO;
+    private final Posicao POSICAO_ALA_PIVO = Posicao.ALA_PIVO;
+    private boolean modoAlteracao;
+    private boolean novoRegistro;
+    private DefaultListModel telefonesListModel;
+    private DefaultListModel partidasListModel;
+    private DefaultListModel timesListModel;
+    private DefaultListModel premiacaoListModel;
+    private DateFormat dateFormat;
     private MaskFormatter ftmData;
     private MaskFormatter ftmRG;
     private MaskFormatter ftmCPF;
     private MaskFormatter ftmCEP;
-    /**
-     * Creates new form CadastroJogadorBasquete
-     */
+    private JogadorBasquete jogador;
+    private ArrayList<DadosPartida> tempHistoricoPartidas;
+    private ControleJogadorBasquete controleJogador;
+
     public CadastroJogadorBasquete() {
+
         try {
             ftmData = FabricaMaskFormatter.getData();
-            
             ftmRG = FabricaMaskFormatter.getRG();
-            
             ftmCPF = FabricaMaskFormatter.getCPF();
-            
             ftmCEP = FabricaMaskFormatter.getCEP();
-            
         } catch (ParseException ex) {
             Logger.getLogger(CadastroJogadorBasquete.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         initComponents();
+
+        this.habilitarDesabilitarCampos();
+
+        this.controleJogador = new ControleJogadorBasquete();
+
+        this.dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+
+        this.premiacaoListModel = new DefaultListModel();
+        this.jListPremiacao.setModel(premiacaoListModel);
+
+        this.telefonesListModel = new DefaultListModel();
+        this.jListTelefones.setModel(telefonesListModel);
+
+        this.partidasListModel = new DefaultListModel();
+        this.jListPartidas.setModel(partidasListModel);
+
+        this.timesListModel = new DefaultListModel();
+        this.jListTimes.setModel(timesListModel);
+
+
+        limparCampos();
+        inicializarMapPosicao();
+
+    }
+
+    private void inicializarMapPosicao() {
+        this.posicao = new EnumMap<Posicao, Integer>(Posicao.class);
+        this.posicao_inversa = new HashMap<Integer, Posicao>();
+
+        int temp = 0;
+
+        for (Posicao valor : Posicao.values()) {
+            posicao.put(valor, temp);
+            posicao_inversa.put(temp, valor); // sem paciencia para procurar a chave 
+            temp++;
+        }
+    }
+
+    // ctrl c + ctrl v
+    private void limparCampos() {
+        jTextFieldAltura.setText("0.0");
+        jTextFieldBairro.setText(null);
+        jFormattedTextFieldCep.setText(null);
+        jTextFieldCidade.setText(null);
+        jTextFieldComplemento.setText(null);
+        jFormattedTextFieldCpf.setText(null);
+        jTextFieldDataNascimento.setText(null);
+        jTextFieldEstado.setText(null);
+        jTextFieldLogradouro.setText(null);
+        jTextFieldNome.setText(null);
+        jTextFieldNomeMae.setText(null);
+        jTextFieldNomePai.setText(null);
+        jTextFieldNumero.setText("0");
+        jTextFieldPeso.setText("0.0");
+        jFormattedTextFieldRg.setText(null);
+        telefonesListModel.clear();
+        premiacaoListModel.clear();
+        partidasListModel.clear();
+        timesListModel.clear();
+        jComboBoxSexo.setSelectedIndex(0);
+        jComboBoxCategoria.setSelectedIndex(0);
+
+        //esp. da classe JBasquete
+        jComboBoxPosicao.setSelectedIndex(0);
+        jTextFieldNumeroCamisa.setText("0");
+        jTextFieldTotalJogos.setText(null);
+        jTextFieldTotalVitorias.setText(null);
+        jTextFieldJogosSelecao.setText(null);
+        jTextFieldVitoriasSelecao.setText(null);
+        jTextFieldPontuacaoMedia.setText(null);
+        jTextFieldPorcentegemLancesLivresConvertidos.setText(null);
+        jTextFieldMediaFaltasSofridas.setText(null);
+        jTextFieldMediaFaltasCometidas.setText(null);
+    }
+
+    private void preencherCampos() {
+        ArrayList<String> telefones;
+        ArrayList<Premiacao> premiacoes;
+
+        jTextFieldAltura.setText(Double.toString(jogador.getAltura()));
+        jTextFieldBairro.setText(jogador.getEndereco().getBairro());
+        jFormattedTextFieldCep.setText(jogador.getEndereco().getCep());
+        jTextFieldCidade.setText(jogador.getEndereco().getCidade());
+        jTextFieldComplemento.setText(jogador.getEndereco().getComplemento());
+        jFormattedTextFieldCpf.setText(jogador.getCpf());
+
+        if (jogador.getDataNascimento() == null) {
+            jTextFieldDataNascimento.setText(null);
+        } else {
+            jTextFieldDataNascimento.setText(dateFormat.format(jogador.getDataNascimento()));
+        }
+
+        jTextFieldEstado.setText(jogador.getEndereco().getEstado());
+        jTextFieldLogradouro.setText(jogador.getEndereco().getLogradouro());
+        jTextFieldNome.setText(jogador.getNome());
+        jTextFieldNomeMae.setText(jogador.getNomeMae());
+        jTextFieldNomePai.setText(jogador.getNomePai());
+        jTextFieldNumero.setText(jogador.getEndereco().getNumero().toString());
+        jTextFieldPais.setText(jogador.getEndereco().getPais());
+        jTextFieldPeso.setText(Double.toString(jogador.getPeso()));
+        jFormattedTextFieldRg.setText(jogador.getRg());
+        jTextFieldTotalVitorias.setText(Integer.toString(jogador.getTotalVitorias()));
+
+        telefonesListModel.clear();
+
+        telefones = jogador.getTelefones();
+        for (String telefone : telefones) {
+            telefonesListModel.addElement(telefone);
+        }
+
+        premiacaoListModel.clear();
+        premiacoes = (ArrayList<Premiacao>) jogador.getPremiacoes();
+
+        for (Premiacao p : premiacoes) {
+            premiacaoListModel.addElement(p);
+        }
+
+        switch (jogador.getSexo()) {
+            case SEXO_MASCULINO_VALOR:
+                jComboBoxSexo.setSelectedIndex(SEXO_MASCULINO_INDICE);
+                break;
+            case SEXO_FEMININO_VALOR:
+                jComboBoxSexo.setSelectedIndex(SEXO_FEMININO_INDICE);
+                break;
+        }
+
+        switch (jogador.getCategoria()) {
+            case CATEGORIA_AMADOR_VALOR:
+                jComboBoxCategoria.setSelectedIndex(CATEGORIA_AMADOR_INDICE);
+                break;
+            case CATEGORIA_PROFISSIONAL_VALOR:
+                jComboBoxCategoria.setSelectedIndex(CATEGORIA_PROFISSIONAL_INDICE);
+                break;
+        }
+
+        jComboBoxPosicao.setSelectedItem(posicao.get(jogador.getPosicao()));
+
+        jTextFieldNumeroCamisa.setText("" + jogador.getNumeroCamisa());
+        jTextFieldTotalJogos.setText("" + jogador.getTotalJogos());
+        jTextFieldTotalVitorias.setText("" + jogador.getTotalVitorias());
+        jTextFieldJogosSelecao.setText("" + jogador.getJogosSelecao());
+        jTextFieldVitoriasSelecao.setText("" + jogador.getVitoriasSelecao());
+        jTextFieldPontuacaoMedia.setText("" + jogador.getPontuacaoMedia());
+        jTextFieldPorcentegemLancesLivresConvertidos.setText("" + jogador.getPorcentagemLancesLivresConvertidos());
+        jTextFieldMediaFaltasSofridas.setText("" + jogador.getMediaFaltasSofridas());
+        jTextFieldMediaFaltasCometidas.setText("" + jogador.getMediaFaltasCometidas());
+    }
+
+    private boolean validarCampos() {
+        if (jTextFieldNome.getText().trim().length() == 0) {
+            this.exibirInformacao("O valor do campo 'Nome' não foi informado.");
+            jTextFieldNome.requestFocus();
+            return false;
+        }
+
+        if (jTextFieldDataNascimento.getText().length() != 0) {
+            try {
+                dateFormat.parse(jTextFieldDataNascimento.getText());
+            } catch (ParseException ex) {
+                this.exibirInformacao("O valor do campo 'Data de Nascimento' é inválido.");
+                jTextFieldDataNascimento.requestFocus();
+                return false;
+            }
+        }
+
+
+        try {
+            Double.parseDouble(jTextFieldAltura.getText());
+        } catch (Exception ex) {
+            this.exibirInformacao("O valor do campo 'Altura' é inválido.");
+            jTextFieldAltura.requestFocus();
+            return false;
+        }
+        try {
+            Double.parseDouble(jTextFieldPeso.getText());
+        } catch (Exception ex) {
+            this.exibirInformacao("O valor do campo 'Peso' é inválido.");
+            jTextFieldPeso.requestFocus();
+            return false;
+        }
+        if (!jTextFieldNumero.getText().equals("")) {
+            try {
+                Integer.parseInt(jTextFieldNumero.getText());
+            } catch (Exception ex) {
+                this.exibirInformacao("O valor do campo 'Número' é inválido.");
+                jTextFieldNumero.requestFocus();
+                return false;
+            }
+        }
+
+        try {
+            Integer.parseInt(jTextFieldNumeroCamisa.getText());
+        } catch (Exception ex) {
+            this.exibirInformacao("O valor do campo 'Numero Camisa' é inválido.");
+            jTextFieldNumeroCamisa.requestFocus();
+            return false;
+        }
+
+
+        return true;
+    }
+
+    private void habilitarDesabilitarCampos() {
+        boolean registroSelecionado = (jogador != null);
+        jTextFieldAltura.setEnabled(modoAlteracao);
+        jTextFieldBairro.setEnabled(modoAlteracao);
+        jFormattedTextFieldCep.setEnabled(modoAlteracao);
+        jTextFieldCidade.setEnabled(modoAlteracao);
+        jTextFieldComplemento.setEnabled(modoAlteracao);
+        jFormattedTextFieldCpf.setEnabled(modoAlteracao);
+        jTextFieldDataNascimento.setEnabled(modoAlteracao);
+        jTextFieldEstado.setEnabled(modoAlteracao);
+        jTextFieldLogradouro.setEnabled(modoAlteracao);
+        jTextFieldNome.setEnabled(modoAlteracao);
+        jTextFieldNomeMae.setEnabled(modoAlteracao);
+        jTextFieldNomePai.setEnabled(modoAlteracao);
+        jTextFieldNumero.setEnabled(modoAlteracao);
+        jTextFieldPais.setEnabled(modoAlteracao);
+        jTextFieldPeso.setEnabled(modoAlteracao);
+        jFormattedTextFieldRg.setEnabled(modoAlteracao);
+        jTextFieldNumeroCamisa.setEnabled(modoAlteracao);
+        jButtonNovo.setEnabled(modoAlteracao == false);
+        jButtonAlterar.setEnabled(modoAlteracao == false && registroSelecionado == true);
+        jButtonExcluir.setEnabled(modoAlteracao == false && registroSelecionado == true);
+        jButtonPesquisar.setEnabled(modoAlteracao == false);
+        jButtonSalvar.setEnabled(modoAlteracao);
+        jButtonCancelar.setEnabled(modoAlteracao);
+        jButtonAdicionarTelefone.setEnabled(modoAlteracao);
+        jButtonRemoverTelefone.setEnabled(modoAlteracao);
+        jButtonAdicionarPremiacao.setEnabled(modoAlteracao);
+        jButtonRemoverPremiacao.setEnabled(modoAlteracao);
+        jButtonAdionarPartida.setEnabled(modoAlteracao);
+        jButtonAdionarPartida.setEnabled(modoAlteracao);
+        jButtonRemoverPartida.setEnabled(modoAlteracao);
+        jButtonAdicionarTime.setEnabled(modoAlteracao);
+        jButtonRemoverTime.setEnabled(modoAlteracao);
+        jComboBoxSexo.setEnabled(modoAlteracao);
+        jComboBoxCategoria.setEnabled(modoAlteracao);
+        jComboBoxPosicao.setEnabled(modoAlteracao);
+        jTableJogadores.setEnabled(modoAlteracao == false);
+    }
+
+    private void salvarRegistro() {
+
+        Endereco endereco;
+        Date dataNascimento;
+
+        if (this.validarCampos() == false) {
+            return;
+        }
+
+        if (jTextFieldDataNascimento.getText().length() == 0) {
+            dataNascimento = null;
+        } else {
+            try {
+                dataNascimento = dateFormat.parse(jTextFieldDataNascimento.getText());
+            } catch (ParseException ex) {
+                this.exibirInformacao("Falha ao gravar a data de nascimento: " + ex.toString());
+                return;
+            }
+        }
+
+        endereco = new Endereco();
+        endereco.setBairro(jTextFieldBairro.getText());
+        endereco.setCep(jFormattedTextFieldCep.getText());
+        endereco.setCidade(jTextFieldCidade.getText());
+        endereco.setComplemento(jTextFieldComplemento.getText());
+        endereco.setEstado(jTextFieldEstado.getText());
+        endereco.setLogradouro(jTextFieldLogradouro.getText());
+        endereco.setNumero(jTextFieldNumero.getText());
+        endereco.setPais(jTextFieldPais.getText());
+
+        if (novoRegistro == true) {
+            jogador = new JogadorBasquete(jTextFieldNome.getText());
+        } else {
+            jogador.setNome(jTextFieldNome.getText());
+        }
+
+
+        for (int i = 0; i < telefonesListModel.size(); i++) {
+            jogador.addTelefone((String) telefonesListModel.getElementAt(i));
+        }
+
+        for (int i = 0; i < premiacaoListModel.size(); i++) {
+            Premiacao premiacao = (Premiacao) premiacaoListModel.getElementAt(i);
+            jogador.addPartida(premiacao);
+        }
+
+        for (int i = 0; i < partidasListModel.size(); i++) {
+            jogador.addPartida((DadosPartida) partidasListModel.getElementAt(i));
+        }
+
+        for (int i = 0; i < timesListModel.size(); i++) {
+            jogador.addTime((Time) timesListModel.getElementAt(i));
+        }
+
+        jogador.setEndereco(endereco);
+        jogador.setDataNascimento(dataNascimento);
+        jogador.setAltura(Double.parseDouble(jTextFieldAltura.getText()));
+        jogador.setNomeMae(jTextFieldNomeMae.getText());
+        jogador.setNomePai(jTextFieldNomePai.getText());
+        jogador.setPeso(Double.parseDouble(jTextFieldPeso.getText()));
+        jogador.setCpf(jFormattedTextFieldCpf.getText());
+        jogador.setRg(jFormattedTextFieldRg.getText());
+
+
+        switch (jComboBoxSexo.getSelectedIndex()) {
+            case SEXO_MASCULINO_INDICE:
+                jogador.setSexo(SEXO_MASCULINO_VALOR);
+                break;
+            case SEXO_FEMININO_INDICE:
+                jogador.setSexo(SEXO_FEMININO_VALOR);
+                break;
+        }
+
+        switch (jComboBoxCategoria.getSelectedIndex()) {
+            case CATEGORIA_AMADOR_INDICE:
+                jogador.setCategoria(CATEGORIA_AMADOR_VALOR);
+                break;
+            case CATEGORIA_PROFISSIONAL_INDICE:
+                jogador.setCategoria(CATEGORIA_PROFISSIONAL_VALOR);
+                break;
+        }
+
+        jogador.setPosicao(posicao_inversa.get(jComboBoxPosicao.getSelectedIndex()));
+
+        if (novoRegistro == true) {
+            controleJogador.adicionar(jogador);
+        }
+
+        modoAlteracao = false;
+        novoRegistro = false;
+
+        this.carregarListaJogadoresBasquete();
+        this.habilitarDesabilitarCampos();
+    }
+
+    private void carregarListaJogadoresBasquete() {
+        ArrayList<JogadorBasquete> listaJogadores = (ArrayList<JogadorBasquete>) controleJogador.getListaJogadores();
+
+        DefaultTableModel model = (DefaultTableModel) jTableJogadores.getModel();
+        model.setRowCount(0);
+        for (JogadorBasquete b : listaJogadores) {
+            model.addRow(new String[]{b.getNome(), b.getCpf()});
+        }
+
+        jTableJogadores.setModel(model);
+    }
+
+    private void exibirInformacao(String info) {
+        JOptionPane.showMessageDialog(this, info, "Atenção", JOptionPane.INFORMATION_MESSAGE);
     }
 
     /**
@@ -52,17 +438,17 @@ public class CadastroJogadorBasquete extends javax.swing.JFrame {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
-        jButton5 = new javax.swing.JButton();
-        jButton6 = new javax.swing.JButton();
+        jButtonNovo = new javax.swing.JButton();
+        jButtonAlterar = new javax.swing.JButton();
+        jButtonExcluir = new javax.swing.JButton();
+        jButtonPesquisar = new javax.swing.JButton();
+        jButtonCancelar = new javax.swing.JButton();
+        jButtonSalvar = new javax.swing.JButton();
         espaco_horizontal = new javax.swing.Box.Filler(new java.awt.Dimension(220, 0), new java.awt.Dimension(220, 0), new java.awt.Dimension(220, 32767));
         jPanel2 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jList1 = new javax.swing.JList();
+        jTableJogadores = new javax.swing.JTable();
         jTabbedPane4 = new javax.swing.JTabbedPane();
         jPanel6 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
@@ -73,21 +459,21 @@ public class CadastroJogadorBasquete extends javax.swing.JFrame {
         jLabel7 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
-        dataNascimento = new javax.swing.JFormattedTextField(ftmData);
+        jTextFieldNome = new javax.swing.JTextField();
+        jTextFieldDataNascimento = new javax.swing.JFormattedTextField(ftmData);
         jLabel10 = new javax.swing.JLabel();
-        jTextField2 = new javax.swing.JTextField();
+        jTextFieldAltura = new javax.swing.JTextField();
         jLabel11 = new javax.swing.JLabel();
-        jTextField3 = new javax.swing.JTextField();
+        jTextFieldPeso = new javax.swing.JTextField();
         jComboBoxSexo = new javax.swing.JComboBox();
-        jTextField4 = new javax.swing.JTextField();
-        jTextField5 = new javax.swing.JTextField();
-        jFormattedTextField1 = new javax.swing.JFormattedTextField(ftmRG);
-        jFormattedTextField2 = new javax.swing.JFormattedTextField(ftmCPF);
+        jTextFieldNomeMae = new javax.swing.JTextField();
+        jTextFieldNomePai = new javax.swing.JTextField();
+        jFormattedTextFieldRg = new javax.swing.JFormattedTextField(ftmRG);
+        jFormattedTextFieldCpf = new javax.swing.JFormattedTextField(ftmCPF);
+        jButtonRemoverTelefone = new javax.swing.JButton();
+        jButtonAdicionarTelefone = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         jListTelefones = new javax.swing.JList();
-        jButton7 = new javax.swing.JButton();
-        jButton8 = new javax.swing.JButton();
         jPanel7 = new javax.swing.JPanel();
         jLabel12 = new javax.swing.JLabel();
         jLabel13 = new javax.swing.JLabel();
@@ -96,13 +482,15 @@ public class CadastroJogadorBasquete extends javax.swing.JFrame {
         jLabel16 = new javax.swing.JLabel();
         jLabel17 = new javax.swing.JLabel();
         jLabel18 = new javax.swing.JLabel();
-        jTextField6 = new javax.swing.JTextField();
-        jTextField7 = new javax.swing.JTextField();
-        jTextField8 = new javax.swing.JTextField();
-        jTextField9 = new javax.swing.JTextField();
-        jTextField10 = new javax.swing.JTextField();
-        jFormattedTextField3 = new javax.swing.JFormattedTextField(ftmCEP);
-        jComboBoxEstado = new javax.swing.JComboBox();
+        jTextFieldLogradouro = new javax.swing.JTextField();
+        jTextFieldNumero = new javax.swing.JTextField();
+        jTextFieldComplemento = new javax.swing.JTextField();
+        jTextFieldBairro = new javax.swing.JTextField();
+        jTextFieldCidade = new javax.swing.JTextField();
+        jFormattedTextFieldCep = new javax.swing.JFormattedTextField(ftmCEP);
+        jTextFieldEstado = new javax.swing.JTextField();
+        jLabel31 = new javax.swing.JLabel();
+        jTextFieldPais = new javax.swing.JTextField();
         jPanel8 = new javax.swing.JPanel();
         jLabel19 = new javax.swing.JLabel();
         jLabel20 = new javax.swing.JLabel();
@@ -115,56 +503,74 @@ public class CadastroJogadorBasquete extends javax.swing.JFrame {
         jLabel27 = new javax.swing.JLabel();
         jLabel28 = new javax.swing.JLabel();
         jLabel29 = new javax.swing.JLabel();
-        jTextField13 = new javax.swing.JTextField();
-        jTextField14 = new javax.swing.JTextField();
-        jTextField15 = new javax.swing.JTextField();
-        jTextField16 = new javax.swing.JTextField();
-        jTextField17 = new javax.swing.JTextField();
-        jTextField18 = new javax.swing.JTextField();
-        jTextField19 = new javax.swing.JTextField();
-        jTextField20 = new javax.swing.JTextField();
-        jTextField21 = new javax.swing.JTextField();
+        jTextFieldNumeroCamisa = new javax.swing.JTextField();
+        jTextFieldTotalJogos = new javax.swing.JTextField();
+        jTextFieldTotalVitorias = new javax.swing.JTextField();
+        jTextFieldJogosSelecao = new javax.swing.JTextField();
+        jTextFieldVitoriasSelecao = new javax.swing.JTextField();
+        jTextFieldPontuacaoMedia = new javax.swing.JTextField();
+        jTextFieldPorcentegemLancesLivresConvertidos = new javax.swing.JTextField();
+        jTextFieldMediaFaltasSofridas = new javax.swing.JTextField();
+        jTextFieldMediaFaltasCometidas = new javax.swing.JTextField();
         jComboBoxCategoria = new javax.swing.JComboBox();
-        jComboBox1 = new javax.swing.JComboBox();
+        jComboBoxPosicao = new javax.swing.JComboBox();
         jLabel30 = new javax.swing.JLabel();
         jScrollPane3 = new javax.swing.JScrollPane();
-        jList2 = new javax.swing.JList();
-        jButton9 = new javax.swing.JButton();
-        jButton10 = new javax.swing.JButton();
-        jButton11 = new javax.swing.JButton();
+        jListPremiacao = new javax.swing.JList();
+        jButtonAdicionarPremiacao = new javax.swing.JButton();
+        jButtonRemoverPremiacao = new javax.swing.JButton();
+        jPanel3 = new javax.swing.JPanel();
+        jButtonAdionarPartida = new javax.swing.JButton();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        jListPartidas = new javax.swing.JList();
+        jScrollPane5 = new javax.swing.JScrollPane();
+        jListTimes = new javax.swing.JList();
+        jButtonRemoverPartida = new javax.swing.JButton();
+        jButtonAdicionarTime = new javax.swing.JButton();
+        jButtonRemoverTime = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Cadastro Jogador de Basquete");
 
-        jButton1.setText("Novo");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        jButtonNovo.setText("Novo");
+        jButtonNovo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                jButtonNovoActionPerformed(evt);
             }
         });
 
-        jButton2.setText("Alterar");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        jButtonAlterar.setText("Alterar");
+        jButtonAlterar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                jButtonAlterarActionPerformed(evt);
             }
         });
 
-        jButton3.setText("Excluir");
-
-        jButton4.setText("Pesquisar...");
-
-        jButton5.setText("Cancelar");
-        jButton5.addActionListener(new java.awt.event.ActionListener() {
+        jButtonExcluir.setText("Excluir");
+        jButtonExcluir.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton5ActionPerformed(evt);
+                jButtonExcluirActionPerformed(evt);
             }
         });
 
-        jButton6.setText("Salvar");
-        jButton6.addActionListener(new java.awt.event.ActionListener() {
+        jButtonPesquisar.setText("Pesquisar...");
+        jButtonPesquisar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton6ActionPerformed(evt);
+                jButtonPesquisarActionPerformed(evt);
+            }
+        });
+
+        jButtonCancelar.setText("Cancelar");
+        jButtonCancelar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonCancelarActionPerformed(evt);
+            }
+        });
+
+        jButtonSalvar.setText("Salvar");
+        jButtonSalvar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonSalvarActionPerformed(evt);
             }
         });
 
@@ -176,23 +582,23 @@ public class CadastroJogadorBasquete extends javax.swing.JFrame {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jButtonNovo, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton2)
+                .addComponent(jButtonAlterar)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton3)
+                .addComponent(jButtonExcluir)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton4)
+                .addComponent(jButtonPesquisar)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(espaco_horizontal, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton6)
+                .addComponent(jButtonSalvar)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton5)
+                .addComponent(jButtonCancelar)
                 .addContainerGap())
         );
 
-        jPanel1Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {jButton1, jButton2, jButton3, jButton4, jButton5, jButton6});
+        jPanel1Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {jButtonAlterar, jButtonCancelar, jButtonExcluir, jButtonNovo, jButtonPesquisar, jButtonSalvar});
 
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -201,18 +607,30 @@ public class CadastroJogadorBasquete extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(espaco_horizontal, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addComponent(jButtonNovo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jButtonAlterar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jButtonExcluir, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jButtonPesquisar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jButtonCancelar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jButtonSalvar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap())
         );
 
         jLabel1.setText("Listar jogadores:");
 
-        jScrollPane1.setViewportView(jList1);
+        jTableJogadores.setModel(new javax.swing.table.DefaultTableModel(
+            null,
+            new String [] {
+                "Nome", "CPF"
+            }
+        ));
+        jTableJogadores.getTableHeader().setReorderingAllowed(false);
+        jTableJogadores.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTableJogadoresMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(jTableJogadores);
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -220,12 +638,9 @@ public class CadastroJogadorBasquete extends javax.swing.JFrame {
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(jLabel1)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(jScrollPane1))
-                .addContainerGap())
+                .addComponent(jLabel1)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addComponent(jScrollPane1)
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -233,8 +648,7 @@ public class CadastroJogadorBasquete extends javax.swing.JFrame {
                 .addGap(6, 6, 6)
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 110, Short.MAX_VALUE))
         );
 
         jLabel2.setText("Nome:");
@@ -253,10 +667,10 @@ public class CadastroJogadorBasquete extends javax.swing.JFrame {
 
         jLabel9.setText("Telefones:");
 
-        dataNascimento.setColumns(8);
-        dataNascimento.addActionListener(new java.awt.event.ActionListener() {
+        jTextFieldDataNascimento.setColumns(8);
+        jTextFieldDataNascimento.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                dataNascimentoActionPerformed(evt);
+                jTextFieldDataNascimentoActionPerformed(evt);
             }
         });
 
@@ -271,22 +685,26 @@ public class CadastroJogadorBasquete extends javax.swing.JFrame {
             }
         });
 
-        jListTelefones.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        jButtonRemoverTelefone.setText("-");
+        jButtonRemoverTelefone.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonRemoverTelefoneActionPerformed(evt);
+            }
+        });
+
+        jButtonAdicionarTelefone.setText("+");
+        jButtonAdicionarTelefone.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonAdicionarTelefoneActionPerformed(evt);
+            }
+        });
+
+        jListTelefones.setModel(new javax.swing.AbstractListModel() {
+            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
+            public int getSize() { return strings.length; }
+            public Object getElementAt(int i) { return strings[i]; }
+        });
         jScrollPane2.setViewportView(jListTelefones);
-
-        jButton7.setText("-");
-        jButton7.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton7ActionPerformed(evt);
-            }
-        });
-
-        jButton8.setText("+");
-        jButton8.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton8ActionPerformed(evt);
-            }
-        });
 
         javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
         jPanel6.setLayout(jPanel6Layout);
@@ -305,33 +723,33 @@ public class CadastroJogadorBasquete extends javax.swing.JFrame {
                     .addComponent(jLabel3))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jTextField1)
-                    .addComponent(jTextField4)
-                    .addComponent(jTextField5)
+                    .addComponent(jTextFieldNome)
+                    .addComponent(jTextFieldNomeMae)
+                    .addComponent(jTextFieldNomePai)
                     .addGroup(jPanel6Layout.createSequentialGroup()
                         .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel6Layout.createSequentialGroup()
                                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                                     .addComponent(jComboBoxSexo, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(dataNascimento, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 113, Short.MAX_VALUE))
+                                    .addComponent(jTextFieldDataNascimento, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 113, Short.MAX_VALUE))
                                 .addGap(32, 32, 32)
                                 .addComponent(jLabel10)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jTextFieldAltura, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(32, 32, 32)
                                 .addComponent(jLabel11)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(jTextFieldPeso, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addComponent(jFormattedTextField2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 117, Short.MAX_VALUE)
-                                .addComponent(jFormattedTextField1, javax.swing.GroupLayout.Alignment.LEADING)))
+                                .addComponent(jFormattedTextFieldCpf, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 117, Short.MAX_VALUE)
+                                .addComponent(jFormattedTextFieldRg, javax.swing.GroupLayout.Alignment.LEADING)))
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(jPanel6Layout.createSequentialGroup()
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 497, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 505, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jButton7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jButton8, javax.swing.GroupLayout.DEFAULT_SIZE, 59, Short.MAX_VALUE))))
+                            .addComponent(jButtonRemoverTelefone, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jButtonAdicionarTelefone, javax.swing.GroupLayout.DEFAULT_SIZE, 51, Short.MAX_VALUE))))
                 .addContainerGap())
         );
         jPanel6Layout.setVerticalGroup(
@@ -340,15 +758,15 @@ public class CadastroJogadorBasquete extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jTextFieldNome, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
-                    .addComponent(dataNascimento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jTextFieldDataNascimento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel10)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jTextFieldAltura, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel11)
-                    .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jTextFieldPeso, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
@@ -356,29 +774,28 @@ public class CadastroJogadorBasquete extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5)
-                    .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jTextFieldNomeMae, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel6)
-                    .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jTextFieldNomePai, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel7)
-                    .addComponent(jFormattedTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jFormattedTextFieldRg, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel8)
-                    .addComponent(jFormattedTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jFormattedTextFieldCpf, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel9)
-                    .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addGroup(jPanel6Layout.createSequentialGroup()
-                            .addComponent(jButton8)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jButton7))
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(116, Short.MAX_VALUE))
+                    .addGroup(jPanel6Layout.createSequentialGroup()
+                        .addComponent(jButtonAdicionarTelefone)
+                        .addGap(8, 8, 8)
+                        .addComponent(jButtonRemoverTelefone))
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(59, Short.MAX_VALUE))
         );
 
         jTabbedPane4.addTab("Informações Gerais", jPanel6);
@@ -397,12 +814,7 @@ public class CadastroJogadorBasquete extends javax.swing.JFrame {
 
         jLabel18.setText("CEP:");
 
-        jComboBoxEstado.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "AC", "AL", "AP", "AM", "BA", "CE", "DF", "ES", "GO", "MA", "MT", "MS", "MG", "PA", "PB", "PR", "PE", "PI", "RJ", "RN", "RS", "RO", "RR", "SC", "SP", "SE", "TO" }));
-        jComboBoxEstado.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jComboBoxEstadoActionPerformed(evt);
-            }
-        });
+        jLabel31.setText("País:");
 
         javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
         jPanel7.setLayout(jPanel7Layout);
@@ -417,62 +829,73 @@ public class CadastroJogadorBasquete extends javax.swing.JFrame {
                             .addComponent(jLabel13))
                         .addGap(28, 28, 28)
                         .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jTextField6)
+                            .addComponent(jTextFieldLogradouro)
                             .addGroup(jPanel7Layout.createSequentialGroup()
-                                .addComponent(jTextField7, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(0, 0, Short.MAX_VALUE))))
+                                .addComponent(jTextFieldNumero, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 544, Short.MAX_VALUE))))
                     .addGroup(jPanel7Layout.createSequentialGroup()
                         .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel16)
                             .addComponent(jLabel17)
-                            .addComponent(jLabel18)
-                            .addComponent(jLabel15))
+                            .addComponent(jLabel18))
                         .addGap(52, 52, 52)
                         .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(jTextField9)
-                                .addComponent(jTextField10, javax.swing.GroupLayout.DEFAULT_SIZE, 166, Short.MAX_VALUE))
-                            .addComponent(jFormattedTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jComboBoxEstado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 431, Short.MAX_VALUE))
+                            .addComponent(jTextFieldCidade, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addComponent(jTextFieldEstado, javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(jFormattedTextFieldCep, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 84, Short.MAX_VALUE))))
                     .addGroup(jPanel7Layout.createSequentialGroup()
-                        .addComponent(jLabel14)
+                        .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel14)
+                            .addComponent(jLabel31))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextField8)))
+                        .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel7Layout.createSequentialGroup()
+                                .addComponent(jTextFieldPais, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel15)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jTextFieldBairro, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jTextFieldComplemento))))
                 .addContainerGap())
         );
+
+        jPanel7Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {jTextFieldBairro, jTextFieldCidade, jTextFieldPais});
+
         jPanel7Layout.setVerticalGroup(
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel7Layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel7Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel12)
-                    .addComponent(jTextField6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jTextFieldLogradouro, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel13)
-                    .addComponent(jTextField7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jTextFieldNumero, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel14)
-                    .addComponent(jTextField8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jTextFieldComplemento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel15)
-                    .addComponent(jTextField9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jTextFieldBairro, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel31)
+                    .addComponent(jTextFieldPais, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel16)
-                    .addComponent(jTextField10, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jTextFieldCidade, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel17)
-                    .addComponent(jComboBoxEstado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jTextFieldEstado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel18)
-                    .addComponent(jFormattedTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(168, Short.MAX_VALUE))
+                    .addComponent(jFormattedTextFieldCep, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(168, 168, 168))
         );
 
         jTabbedPane4.addTab("Endereço", jPanel7);
@@ -501,26 +924,26 @@ public class CadastroJogadorBasquete extends javax.swing.JFrame {
 
         jLabel29.setText("Média Faltas Cometidas:");
 
-        jTextField14.setEnabled(false);
-        jTextField14.addActionListener(new java.awt.event.ActionListener() {
+        jTextFieldTotalJogos.setEnabled(false);
+        jTextFieldTotalJogos.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField14ActionPerformed(evt);
+                jTextFieldTotalJogosActionPerformed(evt);
             }
         });
 
-        jTextField15.setEnabled(false);
+        jTextFieldTotalVitorias.setEnabled(false);
 
-        jTextField16.setEnabled(false);
+        jTextFieldJogosSelecao.setEnabled(false);
 
-        jTextField17.setEnabled(false);
+        jTextFieldVitoriasSelecao.setEnabled(false);
 
-        jTextField18.setEnabled(false);
+        jTextFieldPontuacaoMedia.setEnabled(false);
 
-        jTextField19.setEnabled(false);
+        jTextFieldPorcentegemLancesLivresConvertidos.setEnabled(false);
 
-        jTextField20.setEnabled(false);
+        jTextFieldMediaFaltasSofridas.setEnabled(false);
 
-        jTextField21.setEnabled(false);
+        jTextFieldMediaFaltasCometidas.setEnabled(false);
 
         jComboBoxCategoria.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Amador", "Profissional" }));
         jComboBoxCategoria.addActionListener(new java.awt.event.ActionListener() {
@@ -536,26 +959,24 @@ public class CadastroJogadorBasquete extends javax.swing.JFrame {
             tempName[tempINT] = p.name();
             tempINT++;
         }
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(tempName));
+        jComboBoxPosicao.setModel(new javax.swing.DefaultComboBoxModel(tempName));
 
         jLabel30.setText("Premiações");
 
-        jList2.setModel(new DefaultListModel());
-        jScrollPane3.setViewportView(jList2);
+        jListPremiacao.setModel(new DefaultListModel());
+        jScrollPane3.setViewportView(jListPremiacao);
 
-        jButton9.setText("+");
-        jButton9.addActionListener(new java.awt.event.ActionListener() {
+        jButtonAdicionarPremiacao.setText("+");
+        jButtonAdicionarPremiacao.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton9ActionPerformed(evt);
+                jButtonAdicionarPremiacaoActionPerformed(evt);
             }
         });
 
-        jButton10.setText("-");
-
-        jButton11.setText("Adicionar Novo Jogo");
-        jButton11.addActionListener(new java.awt.event.ActionListener() {
+        jButtonRemoverPremiacao.setText("-");
+        jButtonRemoverPremiacao.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton11ActionPerformed(evt);
+                jButtonRemoverPremiacaoActionPerformed(evt);
             }
         });
 
@@ -579,17 +1000,17 @@ public class CadastroJogadorBasquete extends javax.swing.JFrame {
                     .addComponent(jLabel28))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jTextField18)
-                    .addComponent(jTextField14)
-                    .addComponent(jTextField15)
-                    .addComponent(jTextField16)
-                    .addComponent(jTextField17)
-                    .addComponent(jTextField21)
-                    .addComponent(jComboBox1, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jTextFieldPontuacaoMedia)
+                    .addComponent(jTextFieldTotalJogos)
+                    .addComponent(jTextFieldTotalVitorias)
+                    .addComponent(jTextFieldJogosSelecao)
+                    .addComponent(jTextFieldVitoriasSelecao)
+                    .addComponent(jTextFieldMediaFaltasCometidas)
+                    .addComponent(jComboBoxPosicao, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jComboBoxCategoria, 0, 226, Short.MAX_VALUE)
-                    .addComponent(jTextField13)
-                    .addComponent(jTextField19)
-                    .addComponent(jTextField20))
+                    .addComponent(jTextFieldNumeroCamisa)
+                    .addComponent(jTextFieldPorcentegemLancesLivresConvertidos)
+                    .addComponent(jTextFieldMediaFaltasSofridas))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel30)
@@ -597,11 +1018,8 @@ public class CadastroJogadorBasquete extends javax.swing.JFrame {
                         .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 225, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jButton10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jButton9, javax.swing.GroupLayout.DEFAULT_SIZE, 53, Short.MAX_VALUE)))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel8Layout.createSequentialGroup()
-                        .addComponent(jButton11)
-                        .addContainerGap())))
+                            .addComponent(jButtonRemoverPremiacao, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jButtonAdicionarPremiacao, javax.swing.GroupLayout.DEFAULT_SIZE, 53, Short.MAX_VALUE)))))
         );
         jPanel8Layout.setVerticalGroup(
             jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -610,62 +1028,138 @@ public class CadastroJogadorBasquete extends javax.swing.JFrame {
                 .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel19)
                     .addComponent(jComboBoxCategoria, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton11))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel20)
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel30))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane3)
+                    .addGroup(jPanel8Layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel20)
+                            .addComponent(jComboBoxPosicao, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(jPanel8Layout.createSequentialGroup()
                         .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel8Layout.createSequentialGroup()
-                                .addComponent(jButton9)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jButton10))
-                            .addGroup(jPanel8Layout.createSequentialGroup()
+                                .addGap(51, 51, 51)
                                 .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                     .addComponent(jLabel22)
-                                    .addComponent(jTextField13, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(jTextFieldNumeroCamisa, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                     .addComponent(jLabel21)
-                                    .addComponent(jTextField14, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(jTextFieldTotalJogos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                     .addComponent(jLabel23)
-                                    .addComponent(jTextField15, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(jTextFieldTotalVitorias, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                     .addComponent(jLabel24)
-                                    .addComponent(jTextField16, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(jTextFieldJogosSelecao, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                     .addComponent(jLabel25)
-                                    .addComponent(jTextField17, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(jTextFieldVitoriasSelecao, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addGap(18, 18, 18)
                                 .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                     .addComponent(jLabel27)
-                                    .addComponent(jTextField18, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(jTextFieldPontuacaoMedia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addGap(6, 6, 6)
                                 .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                     .addComponent(jLabel26)
-                                    .addComponent(jTextField19, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(jTextFieldPorcentegemLancesLivresConvertidos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                     .addComponent(jLabel28)
-                                    .addComponent(jTextField20, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(jLabel29)
-                                    .addComponent(jTextField21, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addGap(12, 12, 12))
+                                    .addComponent(jTextFieldMediaFaltasSofridas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addGroup(jPanel8Layout.createSequentialGroup()
+                                .addGap(3, 3, 3)
+                                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(jPanel8Layout.createSequentialGroup()
+                                        .addComponent(jButtonAdicionarPremiacao)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(jButtonRemoverPremiacao)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                    .addGroup(jPanel8Layout.createSequentialGroup()
+                                        .addComponent(jScrollPane3)
+                                        .addGap(21, 21, 21)))))
+                        .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel29)
+                            .addComponent(jTextFieldMediaFaltasCometidas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jTabbedPane4.addTab("Ficha Técnica", jPanel8);
+
+        jButtonAdionarPartida.setText("+");
+        jButtonAdionarPartida.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonAdionarPartidaActionPerformed(evt);
+            }
+        });
+
+        jListPartidas.setModel(new javax.swing.AbstractListModel() {
+            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
+            public int getSize() { return strings.length; }
+            public Object getElementAt(int i) { return strings[i]; }
+        });
+        jScrollPane4.setViewportView(jListPartidas);
+
+        jListTimes.setModel(new javax.swing.AbstractListModel() {
+            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
+            public int getSize() { return strings.length; }
+            public Object getElementAt(int i) { return strings[i]; }
+        });
+        jScrollPane5.setViewportView(jListTimes);
+
+        jButtonRemoverPartida.setText("-");
+
+        jButtonAdicionarTime.setText("+");
+
+        jButtonRemoverTime.setText("-");
+
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 237, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jButtonAdionarPartida, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButtonRemoverPartida))
+                .addGap(44, 44, 44)
+                .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 247, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jButtonAdicionarTime)
+                    .addComponent(jButtonRemoverTime))
+                .addContainerGap(56, Short.MAX_VALUE))
+        );
+
+        jPanel3Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {jButtonAdicionarTime, jButtonAdionarPartida, jButtonRemoverPartida, jButtonRemoverTime});
+
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addGap(43, 43, 43)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addComponent(jButtonAdicionarTime)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButtonRemoverTime))
+                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 377, Short.MAX_VALUE)
+                        .addGroup(jPanel3Layout.createSequentialGroup()
+                            .addComponent(jButtonAdionarPartida)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(jButtonRemoverPartida))
+                        .addComponent(jScrollPane4)))
+                .addContainerGap(21, Short.MAX_VALUE))
+        );
+
+        jTabbedPane4.addTab("Ficha Técnica P2", jPanel3);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -694,79 +1188,156 @@ public class CadastroJogadorBasquete extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void jButtonNovoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonNovoActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton1ActionPerformed
+        jogador = null;
+        modoAlteracao = true;
+        novoRegistro = true;
+        this.limparCampos();
+        this.habilitarDesabilitarCampos();
+        this.jTextFieldNome.requestFocus();
+    }//GEN-LAST:event_jButtonNovoActionPerformed
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    private void jButtonAlterarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAlterarActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton2ActionPerformed
+        modoAlteracao = true;
+        novoRegistro = false;
+        this.habilitarDesabilitarCampos();
+        this.jTextFieldNome.requestFocus();
+    }//GEN-LAST:event_jButtonAlterarActionPerformed
 
-    private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
+    private void jButtonSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSalvarActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton6ActionPerformed
+        this.salvarRegistro();
+    }//GEN-LAST:event_jButtonSalvarActionPerformed
 
-    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+    private void jButtonCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCancelarActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton5ActionPerformed
+        if (novoRegistro == true) {
+            this.limparCampos();
+        } else {
+            this.preencherCampos();
+        }
+        modoAlteracao = false;
+        novoRegistro = false;
+        this.habilitarDesabilitarCampos();
+    }//GEN-LAST:event_jButtonCancelarActionPerformed
 
-    private void dataNascimentoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dataNascimentoActionPerformed
+    private void jTextFieldDataNascimentoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldDataNascimentoActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_dataNascimentoActionPerformed
+    }//GEN-LAST:event_jTextFieldDataNascimentoActionPerformed
 
     private void jComboBoxSexoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxSexoActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jComboBoxSexoActionPerformed
 
-    private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
+    private void jButtonRemoverTelefoneActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRemoverTelefoneActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton7ActionPerformed
+        if (jListTelefones.getSelectedIndex() != -1) {
+            telefonesListModel.removeElementAt(jListTelefones.getSelectedIndex());
+        }
+    }//GEN-LAST:event_jButtonRemoverTelefoneActionPerformed
 
-    private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
+    private void jButtonAdicionarTelefoneActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAdicionarTelefoneActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton8ActionPerformed
+        CadastroTelefone cadastroTelefone = new CadastroTelefone(this, true);
+        cadastroTelefone.setVisible(true);
 
-    private void jComboBoxEstadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxEstadoActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jComboBoxEstadoActionPerformed
+        if (cadastroTelefone.getTelefone() != null) {
+            telefonesListModel.addElement(cadastroTelefone.getTelefone());
+        }
 
-    private void jTextField14ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField14ActionPerformed
+        cadastroTelefone.dispose();
+
+    }//GEN-LAST:event_jButtonAdicionarTelefoneActionPerformed
+
+    private void jTextFieldTotalJogosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldTotalJogosActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField14ActionPerformed
+    }//GEN-LAST:event_jTextFieldTotalJogosActionPerformed
 
     private void jComboBoxCategoriaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxCategoriaActionPerformed
-   
     }//GEN-LAST:event_jComboBoxCategoriaActionPerformed
 
-    private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton9ActionPerformed
+    private void jButtonAdicionarPremiacaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAdicionarPremiacaoActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton9ActionPerformed
+        CadastroPremiacao cadastro = new CadastroPremiacao(this, true);
+        cadastro.setVisible(true);
+        if (cadastro.getPremiacao() != null) {
+            premiacaoListModel.addElement(cadastro.getPremiacao());
+        }
+        cadastro.dispose();
+    }//GEN-LAST:event_jButtonAdicionarPremiacaoActionPerformed
 
-    private void jButton11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton11ActionPerformed
+    private void jButtonAdionarPartidaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAdionarPartidaActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton11ActionPerformed
+    }//GEN-LAST:event_jButtonAdionarPartidaActionPerformed
 
+    private void jButtonExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonExcluirActionPerformed
+        // TODO add your handling code here:
+        this.controleJogador.remover(jogador);
+        jogador = null;
+        this.limparCampos();
+        this.carregarListaJogadoresBasquete();
+        this.habilitarDesabilitarCampos();
+    }//GEN-LAST:event_jButtonExcluirActionPerformed
+
+    private void pesquisarJogador(String pesquisa) {
+        JogadorBasquete jogadorAchado = controleJogador.pesquisar(pesquisa);
+
+        if (jogadorAchado == null) {
+            exibirInformacao("Jogador não encontrado.");
+        } else {
+            this.jogador = jogadorAchado;
+            this.preencherCampos();
+            this.habilitarDesabilitarCampos();
+        }
+    }
+
+    private void jButtonPesquisarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonPesquisarActionPerformed
+        // TODO add your handling code here:
+        String pesquisa = JOptionPane.showInputDialog("Informe o nome do Jogador.");
+        if (pesquisa != null) {
+            this.pesquisarJogador(pesquisa);
+        }
+    }//GEN-LAST:event_jButtonPesquisarActionPerformed
+
+    private void jButtonRemoverPremiacaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRemoverPremiacaoActionPerformed
+        // TODO add your handling code here:
+        if (jListPremiacao.getSelectedIndex() != -1) {
+            premiacaoListModel.removeElementAt(jListPremiacao.getSelectedIndex());
+        }
+    }//GEN-LAST:event_jButtonRemoverPremiacaoActionPerformed
+
+    private void jTableJogadoresMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableJogadoresMouseClicked
+        // TODO add your handling code here:
+        if (jTableJogadores.isEnabled()) {
+            DefaultTableModel model = (DefaultTableModel) jTableJogadores.getModel();
+            String nome = (String) model.getValueAt(jTableJogadores.getSelectedRow(), 0);
+            this.pesquisarJogador(nome);
+        }
+    }//GEN-LAST:event_jTableJogadoresMouseClicked
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JFormattedTextField dataNascimento;
     private javax.swing.Box.Filler espaco_horizontal;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton10;
-    private javax.swing.JButton jButton11;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
-    private javax.swing.JButton jButton5;
-    private javax.swing.JButton jButton6;
-    private javax.swing.JButton jButton7;
-    private javax.swing.JButton jButton8;
-    private javax.swing.JButton jButton9;
-    private javax.swing.JComboBox jComboBox1;
+    private javax.swing.JButton jButtonAdicionarPremiacao;
+    private javax.swing.JButton jButtonAdicionarTelefone;
+    private javax.swing.JButton jButtonAdicionarTime;
+    private javax.swing.JButton jButtonAdionarPartida;
+    private javax.swing.JButton jButtonAlterar;
+    private javax.swing.JButton jButtonCancelar;
+    private javax.swing.JButton jButtonExcluir;
+    private javax.swing.JButton jButtonNovo;
+    private javax.swing.JButton jButtonPesquisar;
+    private javax.swing.JButton jButtonRemoverPartida;
+    private javax.swing.JButton jButtonRemoverPremiacao;
+    private javax.swing.JButton jButtonRemoverTelefone;
+    private javax.swing.JButton jButtonRemoverTime;
+    private javax.swing.JButton jButtonSalvar;
     private javax.swing.JComboBox jComboBoxCategoria;
-    private javax.swing.JComboBox jComboBoxEstado;
+    private javax.swing.JComboBox jComboBoxPosicao;
     private javax.swing.JComboBox jComboBoxSexo;
-    private javax.swing.JFormattedTextField jFormattedTextField1;
-    private javax.swing.JFormattedTextField jFormattedTextField2;
-    private javax.swing.JFormattedTextField jFormattedTextField3;
+    private javax.swing.JFormattedTextField jFormattedTextFieldCep;
+    private javax.swing.JFormattedTextField jFormattedTextFieldCpf;
+    private javax.swing.JFormattedTextField jFormattedTextFieldRg;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -791,42 +1362,51 @@ public class CadastroJogadorBasquete extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel29;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel30;
+    private javax.swing.JLabel jLabel31;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
-    private javax.swing.JList jList1;
-    private javax.swing.JList jList2;
+    private javax.swing.JList jListPartidas;
+    private javax.swing.JList jListPremiacao;
     private javax.swing.JList jListTelefones;
+    private javax.swing.JList jListTimes;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel6;
     private javax.swing.JPanel jPanel7;
     private javax.swing.JPanel jPanel8;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JScrollPane jScrollPane4;
+    private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JTabbedPane jTabbedPane4;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField10;
-    private javax.swing.JTextField jTextField13;
-    private javax.swing.JTextField jTextField14;
-    private javax.swing.JTextField jTextField15;
-    private javax.swing.JTextField jTextField16;
-    private javax.swing.JTextField jTextField17;
-    private javax.swing.JTextField jTextField18;
-    private javax.swing.JTextField jTextField19;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField20;
-    private javax.swing.JTextField jTextField21;
-    private javax.swing.JTextField jTextField3;
-    private javax.swing.JTextField jTextField4;
-    private javax.swing.JTextField jTextField5;
-    private javax.swing.JTextField jTextField6;
-    private javax.swing.JTextField jTextField7;
-    private javax.swing.JTextField jTextField8;
-    private javax.swing.JTextField jTextField9;
+    private javax.swing.JTable jTableJogadores;
+    private javax.swing.JTextField jTextFieldAltura;
+    private javax.swing.JTextField jTextFieldBairro;
+    private javax.swing.JTextField jTextFieldCidade;
+    private javax.swing.JTextField jTextFieldComplemento;
+    private javax.swing.JFormattedTextField jTextFieldDataNascimento;
+    private javax.swing.JTextField jTextFieldEstado;
+    private javax.swing.JTextField jTextFieldJogosSelecao;
+    private javax.swing.JTextField jTextFieldLogradouro;
+    private javax.swing.JTextField jTextFieldMediaFaltasCometidas;
+    private javax.swing.JTextField jTextFieldMediaFaltasSofridas;
+    private javax.swing.JTextField jTextFieldNome;
+    private javax.swing.JTextField jTextFieldNomeMae;
+    private javax.swing.JTextField jTextFieldNomePai;
+    private javax.swing.JTextField jTextFieldNumero;
+    private javax.swing.JTextField jTextFieldNumeroCamisa;
+    private javax.swing.JTextField jTextFieldPais;
+    private javax.swing.JTextField jTextFieldPeso;
+    private javax.swing.JTextField jTextFieldPontuacaoMedia;
+    private javax.swing.JTextField jTextFieldPorcentegemLancesLivresConvertidos;
+    private javax.swing.JTextField jTextFieldTotalJogos;
+    private javax.swing.JTextField jTextFieldTotalVitorias;
+    private javax.swing.JTextField jTextFieldVitoriasSelecao;
     // End of variables declaration//GEN-END:variables
 }

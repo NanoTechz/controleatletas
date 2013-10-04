@@ -1,5 +1,6 @@
 package controleatleta;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class DadosPartida {
@@ -81,6 +82,21 @@ public class DadosPartida {
 
     public void setQtdLancesLivresConvertidos(short qtdLancesLivresConvertidos) {
         this.qtdLancesLivresConvertidos = qtdLancesLivresConvertidos;
+    }
+
+    public boolean isFoiVencedor() {
+        return foiVencedor;
+    }
+
+    public void setFoiVencedor(boolean foiVencedor) {
+        this.foiVencedor = foiVencedor;
+    }
+
+    @Override
+    public String toString() {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        
+        return simpleDateFormat.format(data)+ " - " + (tipo == 'A' ? "Amistoso" : "Oficial");
     }
     
     

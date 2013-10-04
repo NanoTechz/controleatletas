@@ -1,9 +1,13 @@
 package controleatleta.ui;
 
 import controleatleta.Premiacao;
-import controleatleta.util.ConverterData;
 import controleatleta.util.FabricaMaskFormatter;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.text.MaskFormatter;
 
@@ -102,8 +106,14 @@ public class CadastroPremiacao extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
 private void jButtonAdicionarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAdicionarActionPerformed
+    DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
     
-    Date data = ConverterData.converterStringParaData(dataCampo.getText());
+    Date data;
+        try {
+            data = dateFormat.parse(dataCampo.getText());
+        } catch (ParseException ex) {
+            data = null;
+        }
     
     if(data != null){
         premiacao = new Premiacao(jTextFieldTitulo.getText(), data);
