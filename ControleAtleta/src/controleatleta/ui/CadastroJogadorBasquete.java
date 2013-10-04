@@ -528,6 +528,8 @@ public class CadastroJogadorBasquete extends javax.swing.JFrame {
         jButtonRemoverPartida = new javax.swing.JButton();
         jButtonAdicionarTime = new javax.swing.JButton();
         jButtonRemoverTime = new javax.swing.JButton();
+        jLabel32 = new javax.swing.JLabel();
+        jLabel33 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Cadastro Jogador de Basquete");
@@ -1113,10 +1115,29 @@ public class CadastroJogadorBasquete extends javax.swing.JFrame {
         jScrollPane5.setViewportView(jListTimes);
 
         jButtonRemoverPartida.setText("-");
+        jButtonRemoverPartida.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonRemoverPartidaActionPerformed(evt);
+            }
+        });
 
         jButtonAdicionarTime.setText("+");
+        jButtonAdicionarTime.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonAdicionarTimeActionPerformed(evt);
+            }
+        });
 
         jButtonRemoverTime.setText("-");
+        jButtonRemoverTime.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonRemoverTimeActionPerformed(evt);
+            }
+        });
+
+        jLabel32.setText("Partidas:");
+
+        jLabel33.setText("Times:");
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -1124,17 +1145,23 @@ public class CadastroJogadorBasquete extends javax.swing.JFrame {
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 237, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButtonAdionarPartida, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButtonRemoverPartida))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 237, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jButtonAdionarPartida, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jButtonRemoverPartida)))
+                    .addComponent(jLabel32))
                 .addGap(44, 44, 44)
-                .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 247, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButtonAdicionarTime)
-                    .addComponent(jButtonRemoverTime))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 247, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jButtonAdicionarTime)
+                            .addComponent(jButtonRemoverTime)))
+                    .addComponent(jLabel33))
                 .addContainerGap(56, Short.MAX_VALUE))
         );
 
@@ -1143,7 +1170,11 @@ public class CadastroJogadorBasquete extends javax.swing.JFrame {
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGap(43, 43, 43)
+                .addGap(22, 22, 22)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel32)
+                    .addComponent(jLabel33))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addComponent(jButtonAdicionarTime)
@@ -1270,6 +1301,12 @@ public class CadastroJogadorBasquete extends javax.swing.JFrame {
 
     private void jButtonAdionarPartidaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAdionarPartidaActionPerformed
         // TODO add your handling code here:
+        CadastroPartida cadastro = new CadastroPartida(this, true);
+        cadastro.setVisible(true);
+        if (cadastro.getPartida() != null) {
+            premiacaoListModel.addElement(cadastro.getPartida());
+        }
+        cadastro.dispose();
     }//GEN-LAST:event_jButtonAdionarPartidaActionPerformed
 
     private void jButtonExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonExcluirActionPerformed
@@ -1316,6 +1353,30 @@ public class CadastroJogadorBasquete extends javax.swing.JFrame {
             this.pesquisarJogador(nome);
         }
     }//GEN-LAST:event_jTableJogadoresMouseClicked
+
+    private void jButtonRemoverPartidaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRemoverPartidaActionPerformed
+        // TODO add your handling code here:
+        if (jListPartidas.getSelectedIndex() != -1) {
+            partidasListModel.removeElementAt(jListPartidas.getSelectedIndex());
+        }
+    }//GEN-LAST:event_jButtonRemoverPartidaActionPerformed
+
+    private void jButtonRemoverTimeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRemoverTimeActionPerformed
+        // TODO add your handling code here:
+        if (jListTimes.getSelectedIndex() != -1) {
+            timesListModel.removeElementAt(jListTimes.getSelectedIndex());
+        }
+    }//GEN-LAST:event_jButtonRemoverTimeActionPerformed
+
+    private void jButtonAdicionarTimeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAdicionarTimeActionPerformed
+        // TODO add your handling code here:
+        CadastroTime cadastro = new CadastroTime(this, true);
+        cadastro.setVisible(true);
+        if (cadastro.getTime() != null) {
+            premiacaoListModel.addElement(cadastro.getTime());
+        }
+        cadastro.dispose();
+    }//GEN-LAST:event_jButtonAdicionarTimeActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.Box.Filler espaco_horizontal;
     private javax.swing.JButton jButtonAdicionarPremiacao;
@@ -1363,6 +1424,8 @@ public class CadastroJogadorBasquete extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel30;
     private javax.swing.JLabel jLabel31;
+    private javax.swing.JLabel jLabel32;
+    private javax.swing.JLabel jLabel33;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
