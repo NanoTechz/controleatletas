@@ -1,5 +1,6 @@
-package controleatleta;
+package controleatleta.controlador;
 
+import controleatleta.modelo.JogadorBasquete;
 import java.util.ArrayList;
 import java.util.List;
 

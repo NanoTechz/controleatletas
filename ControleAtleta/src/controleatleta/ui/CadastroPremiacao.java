@@ -1,6 +1,6 @@
 package controleatleta.ui;
 
-import controleatleta.Premiacao;
+import controleatleta.modelo.Premiacao;
 import controleatleta.util.FabricaMaskFormatter;
 import java.text.DateFormat;
 import java.text.ParseException;

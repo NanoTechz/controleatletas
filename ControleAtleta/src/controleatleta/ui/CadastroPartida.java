@@ -1,6 +1,6 @@
 package controleatleta.ui;
 
-import controleatleta.Partida;
+import controleatleta.modelo.Partida;
 import controleatleta.util.FabricaMaskFormatter;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

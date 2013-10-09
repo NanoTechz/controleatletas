@@ -4,8 +4,8 @@
  */
 package controleatleta.test;
 
-import controleatleta.JogadorBasquete;
-import controleatleta.Partida;
+import controleatleta.modelo.JogadorBasquete;
+import controleatleta.modelo.Partida;
 import java.util.ArrayList;
 import junit.framework.TestCase;
 import junit.framework.Assert.*;

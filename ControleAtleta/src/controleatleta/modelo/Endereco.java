@@ -1,4 +1,4 @@
-package controleatleta;
+package controleatleta.modelo;
 
 public class Endereco {
     

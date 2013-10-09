@@ -4,7 +4,7 @@
  */
 package controleatleta.ui;
 
-import controleatleta.Time;
+import controleatleta.modelo.Time;
 import controleatleta.util.FabricaMaskFormatter;
 import java.text.DateFormat;
 import java.text.ParseException;
