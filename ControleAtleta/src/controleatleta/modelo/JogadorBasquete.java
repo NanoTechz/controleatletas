@@ -2,8 +2,8 @@ package controleatleta.modelo;
 
 import java.util.ArrayList;
 
+public class JogadorBasquete extends Atleta {
 
-public class JogadorBasquete extends Atleta{
     private char categoria; // A=Amador P=Profissional
     private Posicao posicao;
     private short numeroCamisa;
@@ -15,18 +15,18 @@ public class JogadorBasquete extends Atleta{
         super(nome);
     }
 
-    public void setTimes(ArrayList<Time> times){
+    public void setTimes(ArrayList<Time> times) {
         this.times = times;
     }
-    
-    public void setHistoricoPartidas(ArrayList<Partida> historicoPartidas){
+
+    public void setHistoricoPartidas(ArrayList<Partida> historicoPartidas) {
         this.historicoPartidas = historicoPartidas;
     }
-    
-    public void setPremiacoes(ArrayList<Premiacao> premiacoes){
+
+    public void setPremiacoes(ArrayList<Premiacao> premiacoes) {
         this.premiacoes = premiacoes;
     }
-    
+
     public char getCategoria() {
         return categoria;
     }
@@ -57,87 +57,145 @@ public class JogadorBasquete extends Atleta{
 
     public ArrayList<Partida> getHistoricoPartidas() {
         return historicoPartidas;
-    }  
+    }
 
     public ArrayList<Premiacao> getPremiacoes() {
         return premiacoes;
     }
-    
-    public int getTotalJogos(){
+
+    public int getTotalJogos() {
         return historicoPartidas.size();
     }
-    
-    public int getTotalVitorias(){
-        int count =0;
+
+    public int getTotalVitorias() {
+        int count = 0;
         for (Partida partida : historicoPartidas) {
-            if(partida.isFoiVencedor())
+            if (partida.isFoiVencedor()) {
                 count++;
+            }
         }
-        
+
         return count;
-    }
-    
-    public int getJogosSelecao(){
-        int count =0;
-        for (Partida partida : historicoPartidas) {
-            if(partida.isPelaSelecaoNacional())
-                count++;
-        }
-        
-        return count;
-    } 
-    
-    public int getVitoriasSelecao(){
-        int count =0;
-        for (Partida partida : historicoPartidas) {
-            if(partida.isPelaSelecaoNacional() && partida.isFoiVencedor())
-                count++;
-        }
-        
-        return count;
-    }
-    
-    public double getPontuacaoMedia(){
-        double media = 0;
-        
-       for (Partida partida : historicoPartidas) {
-            media+= partida.getPontuacao();
-        }
-       
-       return (historicoPartidas.isEmpty()? 0 : media/historicoPartidas.size());
-    }
-    
-    public double getPorcentagemLancesLivresConvertidos(){
-        double total= 0;
-        double total_convertidos = 0;
-        
-       for (Partida partida : historicoPartidas) {
-            total+= partida.getQtdLancesLivres();
-            total_convertidos += partida.getQtdLancesLivresConvertidos();
-        }
-       
-       return (total == 0? 0 : total_convertidos/total)* 100; 
-    
-    }
-    public double getMediaFaltasSofridas(){
-        double total= 0;
-        
-       for (Partida partida : historicoPartidas) {
-            total+= partida.getFaltasSofridas();
-        }
-       
-       return (historicoPartidas.isEmpty()? 0 : total/historicoPartidas.size());
     }
 
-    public double getMediaFaltasCometidas(){
-        double total= 0;
-        
-       for (Partida partida : historicoPartidas) {
-            total+= partida.getFaltasCometidas();
+    public int getJogosSelecao() {
+        int count = 0;
+        for (Partida partida : historicoPartidas) {
+            if (partida.isPelaSelecaoNacional()) {
+                count++;
+            }
         }
-       
-       return (historicoPartidas.isEmpty()? 0 : total/historicoPartidas.size());
+
+        return count;
     }
-    
-    
+
+    public int getVitoriasSelecao() {
+        int count = 0;
+        for (Partida partida : historicoPartidas) {
+            if (partida.isPelaSelecaoNacional() && partida.isFoiVencedor()) {
+                count++;
+            }
+        }
+
+        return count;
+    }
+
+    public double getPontuacaoMedia() {
+        double media = 0;
+
+        for (Partida partida : historicoPartidas) {
+            media += partida.getPontuacao();
+        }
+
+        return (historicoPartidas.isEmpty() ? 0 : media / historicoPartidas.size());
+    }
+
+    public double getPorcentagemLancesLivresConvertidos() {
+        double total = 0;
+        double total_convertidos = 0;
+
+        for (Partida partida : historicoPartidas) {
+            total += partida.getQtdLancesLivres();
+            total_convertidos += partida.getQtdLancesLivresConvertidos();
+        }
+
+        return (total == 0 ? 0 : total_convertidos / total) * 100;
+
+    }
+
+    public double getMediaFaltasSofridas() {
+        double total = 0;
+
+        for (Partida partida : historicoPartidas) {
+            total += partida.getFaltasSofridas();
+        }
+
+        return (historicoPartidas.isEmpty() ? 0 : total / historicoPartidas.size());
+    }
+
+    public double getMediaFaltasCometidas() {
+        double total = 0;
+
+        for (Partida partida : historicoPartidas) {
+            total += partida.getFaltasCometidas();
+        }
+
+        return (historicoPartidas.isEmpty() ? 0 : total / historicoPartidas.size());
+    }
+
+    public double getMediaAssistencia() {
+        double total = 0;
+        for (Partida partida : historicoPartidas) {
+            total += partida.getAssistencia();
+        }
+        return (historicoPartidas.isEmpty() ? 0 : total / historicoPartidas.size());
+    }
+
+    public double getMediaBloqueios() {
+        double total = 0;
+        for (Partida partida : historicoPartidas) {
+            total += partida.getBloqueios();
+        }
+        return (historicoPartidas.isEmpty() ? 0 : total / historicoPartidas.size());
+    }
+
+    public double getMediaReboteOfensivo() {
+        double total = 0;
+        for (Partida partida : historicoPartidas) {
+            total += partida.getRebotesOfensivos();
+        }
+        return (historicoPartidas.isEmpty() ? 0 : total / historicoPartidas.size());
+    }
+
+    public double getMediaReboteDefensivo() {
+        double total = 0;
+        for (Partida partida : historicoPartidas) {
+            total += partida.getRebotesDefensivos();
+        }
+        return (historicoPartidas.isEmpty() ? 0 : total / historicoPartidas.size());
+    }
+
+    public double getMediaArremessos1P() {
+        double total = 0;
+        for (Partida partida : historicoPartidas) {
+            total += partida.getQtdArremessos1Ponto();
+        }
+        return (historicoPartidas.isEmpty() ? 0 : total / historicoPartidas.size());
+    }
+
+    public double getMediaArremessos2P() {
+        double total = 0;
+        for (Partida partida : historicoPartidas) {
+            total += partida.getQtdArremessos2Pontos();
+        }
+        return (historicoPartidas.isEmpty() ? 0 : total / historicoPartidas.size());
+    }
+
+    public double getMediaArremessos3P() {
+        double total = 0;
+        for (Partida partida : historicoPartidas) {
+            total += partida.getQtdArremessos3Pontos();
+        }
+        return (historicoPartidas.isEmpty() ? 0 : total / historicoPartidas.size());
+    }
 }

@@ -1,5 +1,6 @@
 package controleatleta.modelo;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Time {
@@ -7,10 +8,12 @@ public class Time {
     private String nome;
     private Date de;
     private Date ate;
+    private SimpleDateFormat dateFormat;
 
     public Time(String nome, Date de) {
         this.nome = nome;
         this.de = de;
+        dateFormat = new SimpleDateFormat("dd/MM/yyyy");
     }
 
     public String getNome() {
@@ -39,6 +42,8 @@ public class Time {
 
     @Override
     public String toString() {
-        return nome;
+        return nome + " - "+dateFormat.format(de)+ " - "+
+                (ate == null? "atual":dateFormat.format(ate))
+                +".";
     }
 }

@@ -127,12 +127,12 @@ public class CadastroJogadorBasquete extends javax.swing.JFrame {
         jTextFieldNumero.setText("0");
         jTextFieldPeso.setText("0.0");
         jFormattedTextFieldRg.setText(null);
-        
+
         telefonesListModel.clear();
         premiacaoListModel.clear();
         partidasListModel.clear();
         timesListModel.clear();
-        
+
         jComboBoxSexo.setSelectedIndex(0);
         jComboBoxCategoria.setSelectedIndex(0);
 
@@ -147,6 +147,14 @@ public class CadastroJogadorBasquete extends javax.swing.JFrame {
         jTextFieldPorcentegemLancesLivresConvertidos.setText(null);
         jTextFieldMediaFaltasSofridas.setText(null);
         jTextFieldMediaFaltasCometidas.setText(null);
+
+        jTextFieldAssistencia.setText(null);
+        jTextFieldArremessos1.setText(null);
+        jTextFieldArremessos2.setText(null);
+        jTextFieldArremessos3.setText(null);
+        jTextFieldRebotesOfensivos.setText(null);
+        jTextFieldRebotesDefensivos.setText(null);
+        jTextFieldBloqueios.setText(null);
     }
 
     private void preencherCampos() {
@@ -192,21 +200,21 @@ public class CadastroJogadorBasquete extends javax.swing.JFrame {
         for (Premiacao p : premiacoes) {
             premiacaoListModel.addElement(p);
         }
-        
+
         partidasListModel.clear();
         partidas = jogador.getHistoricoPartidas();
-        
+
         for (Partida dadosPartida : partidas) {
             partidasListModel.addElement(dadosPartida);
         }
 
         timesListModel.clear();
-        times= jogador.getClubes();
-        
+        times = jogador.getClubes();
+
         for (Time time : times) {
             timesListModel.addElement(time);
         }
-        
+
         switch (jogador.getSexo()) {
             case SEXO_MASCULINO_VALOR:
                 jComboBoxSexo.setSelectedIndex(SEXO_MASCULINO_INDICE);
@@ -236,6 +244,14 @@ public class CadastroJogadorBasquete extends javax.swing.JFrame {
         jTextFieldPorcentegemLancesLivresConvertidos.setText("" + jogador.getPorcentagemLancesLivresConvertidos());
         jTextFieldMediaFaltasSofridas.setText("" + jogador.getMediaFaltasSofridas());
         jTextFieldMediaFaltasCometidas.setText("" + jogador.getMediaFaltasCometidas());
+
+        jTextFieldAssistencia.setText(""+jogador.getMediaAssistencia());
+        jTextFieldArremessos1.setText(""+jogador.getMediaArremessos1P());
+        jTextFieldArremessos2.setText(""+jogador.getMediaArremessos2P());
+        jTextFieldArremessos3.setText(""+jogador.getMediaArremessos3P());
+        jTextFieldRebotesOfensivos.setText(""+jogador.getMediaReboteOfensivo());
+        jTextFieldRebotesDefensivos.setText(""+jogador.getMediaReboteDefensivo());
+        jTextFieldBloqueios.setText(""+jogador.getMediaBloqueios());
     }
 
     private boolean validarCampos() {
@@ -336,12 +352,12 @@ public class CadastroJogadorBasquete extends javax.swing.JFrame {
 
         Endereco endereco;
         Date dataNascimento;
-        
+
         ArrayList<Time> times = new ArrayList<Time>();
         ArrayList<Premiacao> premiacoes = new ArrayList<Premiacao>();
         ArrayList<String> telefones = new ArrayList<String>();
         ArrayList<Partida> partidas = new ArrayList<Partida>();
-        
+
         if (this.validarCampos() == false) {
             return;
         }
@@ -556,6 +572,21 @@ public class CadastroJogadorBasquete extends javax.swing.JFrame {
         jLabel24 = new javax.swing.JLabel();
         jLabel23 = new javax.swing.JLabel();
         jLabel21 = new javax.swing.JLabel();
+        jLabel35 = new javax.swing.JLabel();
+        jLabel36 = new javax.swing.JLabel();
+        jLabel37 = new javax.swing.JLabel();
+        jLabel38 = new javax.swing.JLabel();
+        jTextFieldAssistencia = new javax.swing.JTextField();
+        jTextFieldArremessos1 = new javax.swing.JTextField();
+        jTextFieldArremessos2 = new javax.swing.JTextField();
+        jTextFieldArremessos3 = new javax.swing.JTextField();
+        jLabel39 = new javax.swing.JLabel();
+        jLabel40 = new javax.swing.JLabel();
+        jLabel41 = new javax.swing.JLabel();
+        jTextFieldRebotesOfensivos = new javax.swing.JTextField();
+        jTextFieldRebotesDefensivos = new javax.swing.JTextField();
+        jTextFieldBloqueios = new javax.swing.JTextField();
+        jLabel42 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Cadastro Jogador de Basquete");
@@ -784,7 +815,7 @@ public class CadastroJogadorBasquete extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jButtonRemoverTelefone, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jButtonAdicionarTelefone, javax.swing.GroupLayout.DEFAULT_SIZE, 107, Short.MAX_VALUE))))
+                            .addComponent(jButtonAdicionarTelefone, javax.swing.GroupLayout.DEFAULT_SIZE, 51, Short.MAX_VALUE))))
                 .addContainerGap())
         );
         jPanel6Layout.setVerticalGroup(
@@ -858,44 +889,35 @@ public class CadastroJogadorBasquete extends javax.swing.JFrame {
             .addGroup(jPanel7Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel12)
+                    .addComponent(jLabel13)
+                    .addComponent(jLabel16)
+                    .addComponent(jLabel17)
+                    .addComponent(jLabel18)
+                    .addComponent(jLabel14)
+                    .addComponent(jLabel31))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jTextFieldNumero, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel7Layout.createSequentialGroup()
-                        .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel12)
-                            .addComponent(jLabel13))
-                        .addGap(28, 28, 28)
-                        .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jTextFieldLogradouro)
-                            .addGroup(jPanel7Layout.createSequentialGroup()
-                                .addComponent(jTextFieldNumero, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(0, 600, Short.MAX_VALUE))))
-                    .addGroup(jPanel7Layout.createSequentialGroup()
-                        .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel16)
-                            .addComponent(jLabel17)
-                            .addComponent(jLabel18))
-                        .addGap(52, 52, 52)
-                        .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jTextFieldCidade, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addComponent(jTextFieldEstado, javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(jFormattedTextFieldCep, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 84, Short.MAX_VALUE))))
-                    .addGroup(jPanel7Layout.createSequentialGroup()
-                        .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel14)
-                            .addComponent(jLabel31))
+                        .addComponent(jTextFieldPais, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jLabel15)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel7Layout.createSequentialGroup()
-                                .addComponent(jTextFieldPais, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel15)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jTextFieldBairro, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jTextFieldComplemento))))
-                .addContainerGap())
+                        .addComponent(jTextFieldBairro, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addComponent(jFormattedTextFieldCep, javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(jTextFieldEstado, javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(jTextFieldCidade, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 166, Short.MAX_VALUE))
+                    .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addComponent(jTextFieldComplemento, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 647, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jTextFieldLogradouro, javax.swing.GroupLayout.PREFERRED_SIZE, 647, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jPanel7Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {jTextFieldBairro, jTextFieldCidade, jTextFieldPais});
+
+        jPanel7Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {jTextFieldComplemento, jTextFieldLogradouro});
 
         jPanel7Layout.setVerticalGroup(
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1023,7 +1045,7 @@ public class CadastroJogadorBasquete extends javax.swing.JFrame {
                         .addGap(114, 114, 114)
                         .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jComboBoxPosicao, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jComboBoxCategoria, 0, 282, Short.MAX_VALUE)
+                            .addComponent(jComboBoxCategoria, 0, 276, Short.MAX_VALUE)
                             .addComponent(jTextFieldNumeroCamisa))
                         .addGap(302, 302, 302))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel8Layout.createSequentialGroup()
@@ -1035,7 +1057,7 @@ public class CadastroJogadorBasquete extends javax.swing.JFrame {
                                     .addComponent(jButtonRemoverTime, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(jButtonAdicionarTime, javax.swing.GroupLayout.DEFAULT_SIZE, 47, Short.MAX_VALUE)))
                             .addComponent(jLabel34))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 106, Short.MAX_VALUE)
                         .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel30)
                             .addGroup(jPanel8Layout.createSequentialGroup()
@@ -1049,7 +1071,7 @@ public class CadastroJogadorBasquete extends javax.swing.JFrame {
                 .addGroup(jPanel8Layout.createSequentialGroup()
                     .addGap(204, 204, 204)
                     .addComponent(jLabel33)
-                    .addContainerGap(529, Short.MAX_VALUE)))
+                    .addContainerGap(473, Short.MAX_VALUE)))
         );
         jPanel8Layout.setVerticalGroup(
             jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1157,57 +1179,112 @@ public class CadastroJogadorBasquete extends javax.swing.JFrame {
 
         jLabel21.setText("Total de Jogos:");
 
+        jLabel35.setText("M. Assistências:");
+
+        jLabel36.setText("M. Arremessos 1P:");
+
+        jLabel37.setText("M. Arremessos 2P:");
+
+        jLabel38.setText("M. Arremessos 3P:");
+
+        jTextFieldAssistencia.setEnabled(false);
+
+        jTextFieldArremessos1.setEnabled(false);
+        jTextFieldArremessos1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextFieldArremessos1ActionPerformed(evt);
+            }
+        });
+
+        jTextFieldArremessos2.setEnabled(false);
+
+        jTextFieldArremessos3.setEnabled(false);
+
+        jLabel39.setText("M. Rebotes Ofensivos:");
+
+        jLabel40.setText("M. Rebotes Defensivos:");
+
+        jLabel41.setText("M. Bloqueios:");
+
+        jTextFieldRebotesOfensivos.setEnabled(false);
+
+        jTextFieldRebotesDefensivos.setEnabled(false);
+
+        jTextFieldBloqueios.setEnabled(false);
+        jTextFieldBloqueios.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextFieldBloqueiosActionPerformed(evt);
+            }
+        });
+
+        jLabel42.setForeground(new java.awt.Color(18, 150, 142));
+        jLabel42.setText("M. = Média");
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+            .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel25)
-                            .addComponent(jLabel27)
-                            .addComponent(jLabel26)
-                            .addComponent(jLabel29)
-                            .addComponent(jLabel28))
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(jPanel3Layout.createSequentialGroup()
-                                .addGap(18, 18, 18)
-                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jTextFieldPontuacaoMedia, javax.swing.GroupLayout.PREFERRED_SIZE, 276, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jTextFieldMediaFaltasCometidas, javax.swing.GroupLayout.PREFERRED_SIZE, 276, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jTextFieldPorcentegemLancesLivresConvertidos, javax.swing.GroupLayout.PREFERRED_SIZE, 276, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jTextFieldMediaFaltasSofridas, javax.swing.GroupLayout.PREFERRED_SIZE, 276, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jTextFieldVitoriasSelecao, javax.swing.GroupLayout.PREFERRED_SIZE, 276, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addComponent(jLabel24)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jTextFieldJogosSelecao, javax.swing.GroupLayout.PREFERRED_SIZE, 237, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addComponent(jLabel23)
-                        .addGap(82, 82, 82)
-                        .addComponent(jTextFieldTotalVitorias, javax.swing.GroupLayout.PREFERRED_SIZE, 243, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addComponent(jLabel21)
-                        .addGap(94, 94, 94)
-                        .addComponent(jTextFieldTotalJogos, javax.swing.GroupLayout.PREFERRED_SIZE, 243, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(18, 18, 18)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel32)
+                    .addComponent(jLabel29)
+                    .addComponent(jLabel28)
+                    .addComponent(jLabel26)
+                    .addComponent(jLabel27)
+                    .addComponent(jLabel25)
+                    .addComponent(jLabel24)
+                    .addComponent(jLabel21)
+                    .addComponent(jLabel23)
+                    .addComponent(jLabel35)
+                    .addComponent(jLabel36)
+                    .addComponent(jLabel37)
+                    .addComponent(jLabel38))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jTextFieldTotalJogos, javax.swing.GroupLayout.DEFAULT_SIZE, 243, Short.MAX_VALUE)
+                    .addComponent(jTextFieldTotalVitorias, javax.swing.GroupLayout.DEFAULT_SIZE, 243, Short.MAX_VALUE)
+                    .addComponent(jTextFieldJogosSelecao, javax.swing.GroupLayout.DEFAULT_SIZE, 237, Short.MAX_VALUE)
+                    .addComponent(jTextFieldVitoriasSelecao, javax.swing.GroupLayout.DEFAULT_SIZE, 276, Short.MAX_VALUE)
+                    .addComponent(jTextFieldPontuacaoMedia, javax.swing.GroupLayout.DEFAULT_SIZE, 276, Short.MAX_VALUE)
+                    .addComponent(jTextFieldPorcentegemLancesLivresConvertidos, javax.swing.GroupLayout.DEFAULT_SIZE, 276, Short.MAX_VALUE)
+                    .addComponent(jTextFieldMediaFaltasSofridas, javax.swing.GroupLayout.DEFAULT_SIZE, 276, Short.MAX_VALUE)
+                    .addComponent(jTextFieldMediaFaltasCometidas, javax.swing.GroupLayout.DEFAULT_SIZE, 276, Short.MAX_VALUE)
+                    .addComponent(jTextFieldAssistencia)
+                    .addComponent(jTextFieldArremessos1, javax.swing.GroupLayout.PREFERRED_SIZE, 268, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jTextFieldArremessos2, javax.swing.GroupLayout.PREFERRED_SIZE, 259, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jTextFieldArremessos3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 237, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel39)
+                            .addComponent(jLabel41)
+                            .addComponent(jLabel40)
+                            .addComponent(jLabel42))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jButtonAdionarPartida, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jButtonRemoverPartida)))))
+                            .addComponent(jTextFieldRebotesOfensivos, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jTextFieldRebotesDefensivos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jTextFieldBloqueios, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGap(63, 63, 63)
+                        .addComponent(jLabel32)))
+                .addContainerGap())
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addGap(519, 519, 519)
+                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 237, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jButtonAdionarPartida, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButtonRemoverPartida))
+                .addGap(0, 0, Short.MAX_VALUE))
         );
 
         jPanel3Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {jButtonAdionarPartida, jButtonRemoverPartida});
 
-        jPanel3Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {jTextFieldJogosSelecao, jTextFieldMediaFaltasCometidas, jTextFieldMediaFaltasSofridas, jTextFieldPontuacaoMedia, jTextFieldPorcentegemLancesLivresConvertidos, jTextFieldTotalJogos, jTextFieldTotalVitorias, jTextFieldVitoriasSelecao});
+        jPanel3Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {jTextFieldArremessos1, jTextFieldArremessos2, jTextFieldArremessos3, jTextFieldAssistencia, jTextFieldJogosSelecao, jTextFieldMediaFaltasCometidas, jTextFieldMediaFaltasSofridas, jTextFieldPontuacaoMedia, jTextFieldPorcentegemLancesLivresConvertidos, jTextFieldTotalJogos, jTextFieldTotalVitorias, jTextFieldVitoriasSelecao});
+
+        jPanel3Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {jTextFieldBloqueios, jTextFieldRebotesDefensivos, jTextFieldRebotesOfensivos});
 
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1218,8 +1295,7 @@ public class CadastroJogadorBasquete extends javax.swing.JFrame {
                     .addComponent(jLabel21)
                     .addComponent(jTextFieldTotalJogos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 377, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addComponent(jButtonAdionarPartida)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -1251,8 +1327,32 @@ public class CadastroJogadorBasquete extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jTextFieldMediaFaltasCometidas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel29))))
-                .addContainerGap(20, Short.MAX_VALUE))
+                            .addComponent(jLabel29)))
+                    .addComponent(jScrollPane4))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel35)
+                    .addComponent(jTextFieldAssistencia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel39)
+                    .addComponent(jTextFieldRebotesOfensivos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel36)
+                    .addComponent(jTextFieldArremessos1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel40)
+                    .addComponent(jTextFieldRebotesDefensivos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel37)
+                    .addComponent(jTextFieldArremessos2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel41)
+                    .addComponent(jTextFieldBloqueios, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel38)
+                    .addComponent(jTextFieldArremessos3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel42))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jTabbedPane4.addTab("Ficha Técnica - Dados Partidas", jPanel3);
@@ -1423,10 +1523,11 @@ public class CadastroJogadorBasquete extends javax.swing.JFrame {
     private void jButtonRemoverPartidaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRemoverPartidaActionPerformed
         // TODO add your handling code here:
         if (jListPartidas.getSelectedIndex() != -1) {
-            if(modoAlteracao)
-            partidasListModel.removeElementAt(jListPartidas.getSelectedIndex());
-            
-            
+            if (modoAlteracao) {
+                partidasListModel.removeElementAt(jListPartidas.getSelectedIndex());
+            }
+
+
         }
     }//GEN-LAST:event_jButtonRemoverPartidaActionPerformed
 
@@ -1455,6 +1556,13 @@ public class CadastroJogadorBasquete extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jComboBoxPosicaoActionPerformed
 
+    private void jTextFieldArremessos1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldArremessos1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextFieldArremessos1ActionPerformed
+
+    private void jTextFieldBloqueiosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldBloqueiosActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextFieldBloqueiosActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.Box.Filler espaco_horizontal;
     private javax.swing.JButton jButtonAdicionarPremiacao;
@@ -1505,7 +1613,15 @@ public class CadastroJogadorBasquete extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel32;
     private javax.swing.JLabel jLabel33;
     private javax.swing.JLabel jLabel34;
+    private javax.swing.JLabel jLabel35;
+    private javax.swing.JLabel jLabel36;
+    private javax.swing.JLabel jLabel37;
+    private javax.swing.JLabel jLabel38;
+    private javax.swing.JLabel jLabel39;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel40;
+    private javax.swing.JLabel jLabel41;
+    private javax.swing.JLabel jLabel42;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
@@ -1529,7 +1645,12 @@ public class CadastroJogadorBasquete extends javax.swing.JFrame {
     private javax.swing.JTabbedPane jTabbedPane4;
     private javax.swing.JTable jTableJogadores;
     private javax.swing.JTextField jTextFieldAltura;
+    private javax.swing.JTextField jTextFieldArremessos1;
+    private javax.swing.JTextField jTextFieldArremessos2;
+    private javax.swing.JTextField jTextFieldArremessos3;
+    private javax.swing.JTextField jTextFieldAssistencia;
     private javax.swing.JTextField jTextFieldBairro;
+    private javax.swing.JTextField jTextFieldBloqueios;
     private javax.swing.JTextField jTextFieldCidade;
     private javax.swing.JTextField jTextFieldComplemento;
     private javax.swing.JFormattedTextField jTextFieldDataNascimento;
@@ -1547,6 +1668,8 @@ public class CadastroJogadorBasquete extends javax.swing.JFrame {
     private javax.swing.JTextField jTextFieldPeso;
     private javax.swing.JTextField jTextFieldPontuacaoMedia;
     private javax.swing.JTextField jTextFieldPorcentegemLancesLivresConvertidos;
+    private javax.swing.JTextField jTextFieldRebotesDefensivos;
+    private javax.swing.JTextField jTextFieldRebotesOfensivos;
     private javax.swing.JTextField jTextFieldTotalJogos;
     private javax.swing.JTextField jTextFieldTotalVitorias;
     private javax.swing.JTextField jTextFieldVitoriasSelecao;

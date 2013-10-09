@@ -29,28 +29,38 @@ public class CadastroPartida extends javax.swing.JDialog {
         initComponents();
     }
 
-    private void salvarPartida() {        
+    private void salvarPartida() {
         char tipo;
         Date data = null;
-        
-        if(tipoCampo.getSelectedIndex() == 0)
+
+        if (tipoCampo.getSelectedIndex() == 0) {
             tipo = 'A';
-        else
+        } else {
             tipo = 'O';
-        
+        }
+
         try {
             data = dateFormat.parse(dataCampo.getText());
         } catch (ParseException ex) {
             Logger.getLogger(CadastroPartida.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         partida = new Partida(data, tipo, jgPelaSelecaoCampo.isSelected());
         partida.setFaltasCometidas(Short.parseShort(jTextFieldFaltasCometidas.getText()));
         partida.setFaltasSofridas(Short.parseShort(jTextFieldFaltasSofridas.getText()));
         partida.setPontuacao(Short.parseShort(jTextFieldPontuacao.getText()));
         partida.setQtdLancesLivres(Short.parseShort(jTextFieldQtdLancesLivres.getText()));
         partida.setQtdLancesLivresConvertidos(Short.parseShort(jTextFieldQtdLancesConvertidos.getText()));
-        partida.setFoiVencedor(VenceuCampo.isSelected());      
+        
+        partida.setAssistencia(Short.parseShort(jTextFieldAssistencias.getText()));
+        partida.setQtdArremessos1Ponto(Short.parseShort(jTextFieldArremessos1.getText()));
+        partida.setQtdArremessos2Pontos(Short.parseShort(jTextFieldArremessos2.getText()));
+        partida.setQtdArremessos3Pontos(Short.parseShort(jTextFieldArremessos3.getText()));
+        partida.setBloqueios(Short.parseShort(jTextFieldBloqueio.getText()));
+        partida.setRebotesOfensivos(Short.parseShort(jTextFieldRebotesOfensivos.getText()));
+        partida.setRebotesDefensivos(Short.parseShort(jTextFieldRebotesDefensivos.getText()));
+        
+        partida.setFoiVencedor(VenceuCampo.isSelected());
     }
 
     private boolean validar() {
@@ -59,11 +69,18 @@ public class CadastroPartida extends javax.swing.JDialog {
                 && validarCampoInteiro(jTextFieldFaltasCometidas, "Faltas cometidas")
                 && validarCampoInteiro(jTextFieldFaltasSofridas, "Faltas Sofridas")
                 && validarCampoInteiro(jTextFieldQtdLancesLivres, "Qtd de Lances Livres")
-                && validarCampoInteiro(jTextFieldQtdLancesConvertidos, "Qtd de Lances Livres Convertidos"))) {
+                && validarCampoInteiro(jTextFieldQtdLancesConvertidos, "Qtd de Lances Livres Convertidos")
+                && validarCampoInteiro(jTextFieldAssistencias, "N° Assistências")
+                && validarCampoInteiro(jTextFieldArremessos1, "Qtd Arremessos 1P")
+                && validarCampoInteiro(jTextFieldArremessos2, "Qtd Arremessos 2P")
+                && validarCampoInteiro(jTextFieldArremessos3, "Qtd Arremessos 3P")
+                && validarCampoInteiro(jTextFieldRebotesOfensivos, "Rebotes Ofensivos")
+                && validarCampoInteiro(jTextFieldRebotesOfensivos, "Rebotes Defensivos")
+                && validarCampoInteiro(jTextFieldBloqueio, "Bloqueios"))) {
             return false;
         }
 
-        
+
         if (dataCampo.getText().replace(" ", "").length() > 3) {
             try {
                 dateFormat.parse(dataCampo.getText());
@@ -99,6 +116,7 @@ public class CadastroPartida extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jTextField4 = new javax.swing.JTextField();
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
@@ -121,10 +139,26 @@ public class CadastroPartida extends javax.swing.JDialog {
         jTextFieldQtdLancesLivres = new javax.swing.JTextField();
         jTextFieldFaltasSofridas = new javax.swing.JTextField();
         jTextFieldFaltasCometidas = new javax.swing.JTextField();
-        adicionar = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
         VenceuCampo = new javax.swing.JCheckBox();
+        jLabel9 = new javax.swing.JLabel();
+        jTextFieldAssistencias = new javax.swing.JTextField();
+        jLabel10 = new javax.swing.JLabel();
+        jLabel11 = new javax.swing.JLabel();
+        jLabel12 = new javax.swing.JLabel();
+        jTextFieldArremessos1 = new javax.swing.JTextField();
+        jTextFieldArremessos2 = new javax.swing.JTextField();
+        jTextFieldArremessos3 = new javax.swing.JTextField();
+        jLabel13 = new javax.swing.JLabel();
+        jLabel14 = new javax.swing.JLabel();
+        jTextFieldRebotesOfensivos = new javax.swing.JTextField();
+        jTextFieldRebotesDefensivos = new javax.swing.JTextField();
+        jLabel15 = new javax.swing.JLabel();
+        jTextFieldBloqueio = new javax.swing.JTextField();
+        jButton2 = new javax.swing.JButton();
+        adicionar = new javax.swing.JButton();
         jgPelaSelecaoCampo = new javax.swing.JCheckBox();
+
+        jTextField4.setText("jTextField4");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -166,28 +200,12 @@ public class CadastroPartida extends javax.swing.JDialog {
 
         jTextFieldFaltasCometidas.setText("0");
 
-        adicionar.setText("Adicionar");
-        adicionar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                adicionarActionPerformed(evt);
-            }
-        });
-
-        jButton2.setText("Cancelar");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
-            }
-        });
-
         VenceuCampo.setText("Venceu");
         VenceuCampo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 VenceuCampoActionPerformed(evt);
             }
         });
-
-        jgPelaSelecaoCampo.setText("Jogo Pela Seleção Nacional");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -199,36 +217,27 @@ public class CadastroPartida extends javax.swing.JDialog {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(27, 27, 27)
                 .addComponent(VenceuCampo)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jgPelaSelecaoCampo)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(27, 27, 27)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(27, 27, 27)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel3)
-                            .addComponent(jLabel2)
-                            .addComponent(jLabel8)
-                            .addComponent(jLabel7)
-                            .addComponent(jLabel6)
-                            .addComponent(jLabel5)
-                            .addComponent(jLabel4))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(tipoCampo, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(dataCampo, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jTextFieldPontuacao, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jTextFieldFaltasCometidas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jTextFieldFaltasSofridas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jTextFieldQtdLancesLivres, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jTextFieldQtdLancesConvertidos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(199, 199, 199)
-                        .addComponent(adicionar)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton2)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jLabel3)
+                    .addComponent(jLabel2)
+                    .addComponent(jLabel8)
+                    .addComponent(jLabel7)
+                    .addComponent(jLabel6)
+                    .addComponent(jLabel5)
+                    .addComponent(jLabel4))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(tipoCampo, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(dataCampo, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jTextFieldPontuacao, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jTextFieldFaltasCometidas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jTextFieldFaltasSofridas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jTextFieldQtdLancesLivres, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jTextFieldQtdLancesConvertidos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(24, Short.MAX_VALUE))
         );
 
         jPanel1Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {jTextFieldFaltasCometidas, jTextFieldFaltasSofridas, jTextFieldPontuacao, jTextFieldQtdLancesConvertidos, jTextFieldQtdLancesLivres});
@@ -266,16 +275,64 @@ public class CadastroPartida extends javax.swing.JDialog {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel8)
                     .addComponent(jTextFieldQtdLancesConvertidos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(VenceuCampo)
-                    .addComponent(jgPelaSelecaoCampo))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton2)
-                    .addComponent(adicionar))
-                .addContainerGap(20, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(VenceuCampo)
+                .addContainerGap(45, Short.MAX_VALUE))
         );
+
+        jLabel9.setText("N° Assistências: ");
+
+        jTextFieldAssistencias.setText("0");
+
+        jLabel10.setText("Qtd Arremessos 1P:");
+
+        jLabel11.setText("Qtd Arremessos 2P:");
+
+        jLabel12.setText("Qtd Arremessos 3P:");
+
+        jTextFieldArremessos1.setText("0");
+
+        jTextFieldArremessos2.setText("0");
+
+        jTextFieldArremessos3.setText("0");
+        jTextFieldArremessos3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextFieldArremessos3ActionPerformed(evt);
+            }
+        });
+
+        jLabel13.setText("Rebotes Ofensivos:");
+
+        jLabel14.setText("Rebotes Defensivos:");
+
+        jTextFieldRebotesOfensivos.setText("0");
+        jTextFieldRebotesOfensivos.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextFieldRebotesOfensivosActionPerformed(evt);
+            }
+        });
+
+        jTextFieldRebotesDefensivos.setText("0");
+
+        jLabel15.setText("Bloqueios:");
+
+        jTextFieldBloqueio.setText("0");
+
+        jButton2.setText("Cancelar");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+
+        adicionar.setText("Adicionar");
+        adicionar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                adicionarActionPerformed(evt);
+            }
+        });
+
+        jgPelaSelecaoCampo.setText("Jogo Pela Seleção Nacional");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -284,13 +341,79 @@ public class CadastroPartida extends javax.swing.JDialog {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addGroup(layout.createSequentialGroup()
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(jLabel9)
+                                .addComponent(jLabel10)
+                                .addComponent(jLabel11)
+                                .addComponent(jLabel12)
+                                .addComponent(jLabel13)
+                                .addComponent(jLabel14)
+                                .addComponent(jLabel15))
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(jTextFieldAssistencias)
+                                .addComponent(jTextFieldArremessos1)
+                                .addComponent(jTextFieldArremessos2)
+                                .addComponent(jTextFieldArremessos3)
+                                .addComponent(jTextFieldRebotesOfensivos)
+                                .addComponent(jTextFieldRebotesDefensivos, javax.swing.GroupLayout.DEFAULT_SIZE, 60, Short.MAX_VALUE)
+                                .addComponent(jTextFieldBloqueio)))
+                        .addGroup(layout.createSequentialGroup()
+                            .addComponent(adicionar)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(jButton2)))
+                    .addComponent(jgPelaSelecaoCampo))
+                .addContainerGap(34, Short.MAX_VALUE))
         );
+
+        layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {jTextFieldArremessos1, jTextFieldArremessos2, jTextFieldArremessos3, jTextFieldAssistencias, jTextFieldRebotesDefensivos, jTextFieldRebotesOfensivos});
+
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(31, 31, 31)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel9)
+                            .addComponent(jTextFieldAssistencias, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel10)
+                            .addComponent(jTextFieldArremessos1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel11)
+                            .addComponent(jTextFieldArremessos2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel12)
+                            .addComponent(jTextFieldArremessos3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel13)
+                            .addComponent(jTextFieldRebotesOfensivos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel14)
+                            .addComponent(jTextFieldRebotesDefensivos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jTextFieldBloqueio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel15))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jgPelaSelecaoCampo)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jButton2)
+                            .addComponent(adicionar))))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -316,18 +439,31 @@ public class CadastroPartida extends javax.swing.JDialog {
 
     private void adicionarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_adicionarActionPerformed
         // TODO add your handling code here:
-        if(validar()){
+        if (validar()) {
             this.salvarPartida();
             this.setVisible(false);
         }
     }//GEN-LAST:event_adicionarActionPerformed
 
+    private void jTextFieldArremessos3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldArremessos3ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextFieldArremessos3ActionPerformed
+
+    private void jTextFieldRebotesOfensivosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldRebotesOfensivosActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextFieldRebotesOfensivosActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBox VenceuCampo;
     private javax.swing.JButton adicionar;
     private javax.swing.JFormattedTextField dataCampo;
     private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel14;
+    private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -335,12 +471,21 @@ public class CadastroPartida extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JTextField jTextField4;
+    private javax.swing.JTextField jTextFieldArremessos1;
+    private javax.swing.JTextField jTextFieldArremessos2;
+    private javax.swing.JTextField jTextFieldArremessos3;
+    private javax.swing.JTextField jTextFieldAssistencias;
+    private javax.swing.JTextField jTextFieldBloqueio;
     private javax.swing.JTextField jTextFieldFaltasCometidas;
     private javax.swing.JTextField jTextFieldFaltasSofridas;
     private javax.swing.JTextField jTextFieldPontuacao;
     private javax.swing.JTextField jTextFieldQtdLancesConvertidos;
     private javax.swing.JTextField jTextFieldQtdLancesLivres;
+    private javax.swing.JTextField jTextFieldRebotesDefensivos;
+    private javax.swing.JTextField jTextFieldRebotesOfensivos;
     private javax.swing.JCheckBox jgPelaSelecaoCampo;
     private javax.swing.JComboBox tipoCampo;
     // End of variables declaration//GEN-END:variables
