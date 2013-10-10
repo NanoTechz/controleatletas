@@ -14,25 +14,23 @@ import junit.framework.TestCase;
  * @author nanson
  */
 public class ControleJgBasqueteTest extends TestCase {
-    
+
     private ControleJogadorBasquete controle;
 
     @Override
     protected void setUp() throws Exception {
         controle = new ControleJogadorBasquete();
     }
-    
-    public void testConstrutor(){
+
+    public void testConstrutor() {
         assertNotNull(controle.getListaJogadores());
     }
-    
-    public void testPesquisar(){
-        for (int i = 0; i < 10; i++) {
-            JogadorBasquete jogadorBasquete = new JogadorBasquete(Integer.toString(i)+"teste");
-            controle.adicionar(jogadorBasquete);
-        }
-        
-        assertNotNull(controle.pesquisar("5teste"));
-        assertNull(controle.pesquisar("teste"));
+
+    public void testPesquisar() {
+        JogadorBasquete jogadorBasquete = new JogadorBasquete("Fulano de Tal");
+        controle.adicionar(jogadorBasquete);
+
+        assertNotNull(controle.pesquisar("Fulano de Tal"));
+        assertNull(controle.pesquisar("Maicon"));
     }
 }
